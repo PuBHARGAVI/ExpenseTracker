@@ -4,14 +4,13 @@ import {
   StyleSheet,
   Pressable,
   View,
-  Dimensions,
   SafeAreaView,
-  statusBarStyle,
   StatusBar,
   TouchableNativeFeedback,
   useColorScheme,
 } from 'react-native';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
+import LinearGradient from 'react-native-linear-gradient';
 export const HomeScreen = ({navigation}) => {
   const isDarkMode = useColorScheme() == 'dark';
   const backgroundStyle = {
@@ -19,56 +18,58 @@ export const HomeScreen = ({navigation}) => {
   };
 
   return (
-    <SafeAreaView style={[backgroundStyle, styles.container]}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
-      <Pressable style={styles.pressableContainer}>
-        <TouchableNativeFeedback
-          background={TouchableNativeFeedback.Ripple('lightgreen', false)}
+    <LinearGradient
+      colors={['white', 'lightblue']}
+      start={{x: 0, y: 0}}
+      end={{x: 1, y: 1}}>
+      <View style={styles.viewContainer}>
+        <Pressable
+          style={({pressed}) => [
+            {
+              opacity: pressed ? 0.7 : 1,
+              backgroundColor: pressed ? '#000080' : '#4169e1',
+            },
+            styles.pressableContainer,
+          ]}
           onPress={() => navigation.navigate('Budget')}>
-          <View style={styles.box}>
-            <Text style={styles.title}>Budgets</Text>
-          </View>
-        </TouchableNativeFeedback>
-      </Pressable>
-      <Pressable style={styles.pressableContainer}>
-        <TouchableNativeFeedback
-          background={TouchableNativeFeedback.Ripple('lightgreen', false)}
+          <Text style={styles.title}>Budgets</Text>
+        </Pressable>
+
+        <Pressable
+          style={({pressed}) => [
+            {
+              opacity: pressed ? 0.7 : 1,
+              backgroundColor: pressed ? '#000080' : '#4169e1',
+            },
+            styles.pressableContainer,
+          ]}
           onPress={() => navigation.navigate('Expense')}>
-          <View style={styles.box}>
-            <Text style={styles.title}>Expenses</Text>
-          </View>
-        </TouchableNativeFeedback>
-      </Pressable>
-    </SafeAreaView>
+          <Text style={styles.title}>Expenses</Text>
+        </Pressable>
+      </View>
+    </LinearGradient>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
+  viewContainer: {
+    alignItems: 'flex-start',
     flexDirection: 'row',
-    backgroundColor: 'white',
-    flex: 1,
+    margin: 10,
+    marginTop: 30,
+    width: '100%',
+    height: '100%',
   },
   pressableContainer: {
+    width: 130,
+    height: 130,
+    borderRadius: 100,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingHorizontal: 23,
-  },
-  box: {
-    width: 150,
-    height: 150,
-    backgroundColor: 'green',
-    borderRadius: 15,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  rippleEffectStyles: {
-    color: 'red',
-    radius: 15,
-    borderless: false,
+    margin: 10,
+    shadowColor: 'green',
+    shadowOffset: {width: 0, height: 10},
+    elevation: 4,
   },
   title: {
     fontSize: 18,
