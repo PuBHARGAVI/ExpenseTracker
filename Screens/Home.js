@@ -12,7 +12,7 @@ export const Home = ({navigation}) => {
           style={({pressed}) => [
             {
               opacity: pressed ? 0.7 : 1,
-              backgroundColor: pressed ? '#000080' : '#4169e1',
+              backgroundColor: pressed ? '#000080' : '#1e90ff',
             },
             styles.pressableContainer,
           ]}
@@ -24,7 +24,7 @@ export const Home = ({navigation}) => {
           style={({pressed}) => [
             {
               opacity: pressed ? 0.7 : 1,
-              backgroundColor: pressed ? '#000080' : '#4169e1',
+              backgroundColor: pressed ? '#000080' : '#1e90ff',
             },
             styles.pressableContainer,
           ]}

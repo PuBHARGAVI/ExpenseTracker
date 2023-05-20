@@ -14,7 +14,7 @@ export const AddNewBudget = () => {
         keyboardType="numeric"
         placeholder="Enter the Budget Value"
       />
-      <Button title="Submit" color="green" />
+      <Button title="Submit" />
     </LinearGradient>
   );
 };
@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
   input: {
     height: 40,
     margin: 12,
-    borderBottomColor: 'white',
+    borderBottomColor: '#1e90ff',
     borderBottomWidth: 2,
     padding: 10,
   },

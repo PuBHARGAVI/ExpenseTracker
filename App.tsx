@@ -39,8 +39,7 @@ function App(): JSX.Element {
           screenOptions={{
             headerTitleAlign: 'center',
             headerTitleStyle: {
-              color: '#4169e1',
-              fontWeight: 'bold',
+              color: '#1e90ff',
             },
           }}>
           <Stack.Screen name="Home" component={Home} />
