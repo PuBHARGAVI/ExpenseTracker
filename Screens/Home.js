@@ -1,22 +1,7 @@
 import React from 'react';
-import {
-  Text,
-  StyleSheet,
-  Pressable,
-  View,
-  SafeAreaView,
-  StatusBar,
-  TouchableNativeFeedback,
-  useColorScheme,
-} from 'react-native';
-import {Colors} from 'react-native/Libraries/NewAppScreen';
+import {Text, StyleSheet, Pressable, View} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-export const HomeScreen = ({navigation}) => {
-  const isDarkMode = useColorScheme() == 'dark';
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
-
+export const Home = ({navigation}) => {
   return (
     <LinearGradient
       colors={['white', 'lightblue']}

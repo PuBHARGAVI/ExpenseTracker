@@ -1,8 +1,8 @@
 import React from 'react';
-import {TextInput, View, StyleSheet} from 'react-native';
+import {TextInput, Button, StyleSheet} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
-export const AddNewExpense = () => {
+export const AddNewBudget = () => {
   return (
     <LinearGradient
       colors={['white', 'lightblue']}
@@ -12,8 +12,9 @@ export const AddNewExpense = () => {
       <TextInput
         style={styles.input}
         keyboardType="numeric"
-        placeholder="Enter the Expense Value"
+        placeholder="Enter the Budget Value"
       />
+      <Button title="Submit" color="green" />
     </LinearGradient>
   );
 };
@@ -27,7 +28,7 @@ const styles = StyleSheet.create({
   input: {
     height: 40,
     margin: 12,
-    borderBottomColor: 'blue',
+    borderBottomColor: 'white',
     borderBottomWidth: 2,
     padding: 10,
   },

@@ -6,7 +6,7 @@
  */
 
 import React from 'react';
-import {HomeScreen} from './android/Screens/HomeScreen';
+import {Home} from './Screens/Home';
 import {
   DarkTheme,
   DefaultTheme,
@@ -15,8 +15,8 @@ import {
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {SafeAreaView, StatusBar, useColorScheme} from 'react-native';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
-import {AddNewBudget} from './android/Screens/AddNewBudget';
-import {AddNewExpense} from './android/Screens/AddNewExpense';
+import {AddNewBudget} from './Screens/AddNewBudget';
+import {AddNewExpense} from './Screens/AddNewExpense';
 
 const Stack = createNativeStackNavigator();
 
@@ -43,7 +43,7 @@ function App(): JSX.Element {
               fontWeight: 'bold',
             },
           }}>
-          <Stack.Screen name="Home" component={HomeScreen} />
+          <Stack.Screen name="Home" component={Home} />
           <Stack.Screen
             name="Budget"
             component={AddNewBudget}
