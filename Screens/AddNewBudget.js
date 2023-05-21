@@ -13,8 +13,9 @@ export const AddNewBudget = () => {
         style={styles.input}
         keyboardType="numeric"
         placeholder="Enter the Budget Value"
+        autoFocus={true}
       />
-      <Button title="Submit" />
+      <Button title="Add the budget" />
     </LinearGradient>
   );
 };
@@ -22,7 +23,7 @@ export const AddNewBudget = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignContent: 'center',
+    alignItems: 'center',
     justifyContent: 'center',
   },
   input: {
@@ -31,5 +32,6 @@ const styles = StyleSheet.create({
     borderBottomColor: '#1e90ff',
     borderBottomWidth: 2,
     padding: 10,
+    marginBottom: 30,
   },
 });

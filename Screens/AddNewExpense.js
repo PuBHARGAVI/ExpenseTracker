@@ -1,5 +1,5 @@
 import React from 'react';
-import {TextInput, StyleSheet} from 'react-native';
+import {TextInput, StyleSheet, Button, View} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
 export const AddNewExpense = () => {
@@ -13,7 +13,9 @@ export const AddNewExpense = () => {
         style={styles.input}
         keyboardType="numeric"
         placeholder="Enter the Expense Value"
+        autoFocus={true}
       />
+      <Button title="Add the Expense" />
     </LinearGradient>
   );
 };
@@ -21,7 +23,7 @@ export const AddNewExpense = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignContent: 'center',
+    alignItems: 'center',
     justifyContent: 'center',
   },
   input: {
@@ -30,5 +32,6 @@ const styles = StyleSheet.create({
     borderBottomColor: '#1e90ff',
     borderBottomWidth: 2,
     padding: 10,
+    marginBottom: 30,
   },
 });
