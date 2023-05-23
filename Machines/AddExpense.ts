@@ -7,12 +7,16 @@ const model = createModel(
         amount: 0 as number,
         startDate: new Date().toDateString() as string,
         endDate: new Date().toDateString() as string,
+        showStartDatePicker: false as boolean,
+        showEndDatePicker: false as boolean
     },
     {
         events: {
             ADD_AMOUNT: (amount: number) => ({ amount }),
             ADD_START_DATE: (startDate: string) => ({ startDate }),
             ADD_END_DATE: (endDate: string) => ({ endDate }),
+            HANDLE_START_DATE_PICKER: (showStartDatePicker: boolean) => ({ showStartDatePicker }),
+            HANDLE_END_DATE_PICKER: (showEndDatePicker: boolean) => ({ showEndDatePicker })
         }
     }
 )
@@ -38,6 +42,12 @@ export const addExpenseModelMachine = model.createMachine({
                 ADD_START_DATE: {
                     actions: ['setStartDate']
                 },
+                HANDLE_START_DATE_PICKER: {
+                    actions: ['toggleStartDatePickerVisibility']
+                },
+                HANDLE_END_DATE_PICKER: {
+                    actions: ['toggleEndDatePickerVisibility']
+                },
                 ADD_END_DATE: {
                     actions: ['setEndDate']
                 },
@@ -54,6 +64,12 @@ export const addExpenseModelMachine = model.createMachine({
         }),
         setEndDate: model.assign({
             endDate: (_context, event) => event.endDate,
+        }),
+        toggleStartDatePickerVisibility: model.assign({
+            showStartDatePicker: (context) => !context.showStartDatePicker,
+        }),
+        toggleEndDatePickerVisibility: model.assign({
+            showEndDatePicker: (context) => !context.showEndDatePicker,
         })
     }
 })

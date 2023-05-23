@@ -19,6 +19,8 @@ export interface Typegen0 {
     "setBudgetAmount": "ADD_AMOUNT";
     "setEndDate": "ADD_END_DATE";
     "setStartDate": "ADD_START_DATE";
+    "toggleEndDatePickerVisibility": "HANDLE_END_DATE_PICKER";
+    "toggleStartDatePickerVisibility": "HANDLE_START_DATE_PICKER";
   };
   eventsCausingDelays: {
 
