@@ -1,4 +1,4 @@
-import { EventFrom } from 'xstate';
+import { EventFrom, StateFrom } from 'xstate';
 import { createModel } from 'xstate/lib/model';
 
 
@@ -73,3 +73,12 @@ export const addExpenseModelMachine = model.createMachine({
         })
     }
 })
+
+type State = StateFrom<typeof addExpenseModelMachine>;
+
+export function selectStartDatePickerVisibility(state: State) {
+    return state.context.showStartDatePicker;
+}
+export function selectEndDatePickerVisibility(state: State) {
+    return state.context.showEndDatePicker;
+}
