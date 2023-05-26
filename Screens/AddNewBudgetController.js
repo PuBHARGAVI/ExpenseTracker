@@ -1,19 +1,27 @@
 import {useInterpret, useSelector} from '@xstate/react';
 import {
-  addExpenseModelMachine,
+  addBudgetModelMachine,
   events,
   selectStartDatePickerVisibility,
   selectEndDatePickerVisibility,
-} from '../Machines/AddExpense';
+  selectBudgetAmount,
+  selectStartDate,
+  selectEndDate,
+} from '../Machines/AddBudget';
 
 export function useAddBudgetScreen() {
-  const service = useInterpret(addExpenseModelMachine);
+  const service = useInterpret(addBudgetModelMachine);
 
   return {
     ADD_AMOUNT: amount => service.send(events.ADD_AMOUNT(amount)),
-    ADD_START_DATE: startDate => service.send(events.START_DATE(startDate)),
-    ADD_END_DATE: endDate => service.send(events.END_DATE(endDate)),
+    OK: date => service.send(events.OK(date)),
+    CANCEL: () => service.send(events.CANCEL()),
+    ON_DATE_PICKER_PRESS: pickerType =>
+      service.send(events.ON_DATE_PICKER_PRESS(pickerType)),
     showStartDatePicker: useSelector(service, selectStartDatePickerVisibility),
     showEndDatePicker: useSelector(service, selectEndDatePickerVisibility),
+    startDate: useSelector(service, selectStartDate),
+    endDate: useSelector(service, selectEndDate),
+    budgetAmount: useSelector(service, selectBudgetAmount),
   };
 }

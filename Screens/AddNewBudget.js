@@ -1,41 +1,33 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {Button, Platform, View} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import {theme, themeColors} from '../Theme';
-import {LabeledInputField} from './Components/LabeledInputField';
-import {PressableLabeledInputField} from './Components/PressableLabeledInputField';
+import {LabeledInputField} from '../Components/LabeledInputField';
+import {PressableLabeledInputField} from '../Components/PressableLabeledInputField';
+import {useAddBudgetScreen} from './AddNewBudgetController';
 
 export const AddNewBudget = () => {
-  const [budgetAmount, setBudgetAmount] = useState('0');
-  const [showStartDatePicker, setStartDatePickerVisibility] = useState(false);
-  const [showEndDatePicker, setEndDatePickerVisibility] = useState(false);
-  const [startDate, setStartDate] = useState(new Date().toDateString());
-  const [endDate, setEndDate] = useState(new Date().toDateString());
+  const controller = useAddBudgetScreen();
 
-  const handleBudgetInput = amount => setBudgetAmount(amount);
+  const handleBudgetInput = amount => controller.ADD_AMOUNT(Number(amount));
 
-  const handleStartDateOnChange = ({type}, selectedDate) => {
+  const handleDateChange = ({type}, selectedDate) => {
     if (type == 'set') {
       if (Platform.OS == 'android') {
-        setStartDatePickerVisibility(!showStartDatePicker);
-        setStartDate(selectedDate.toDateString());
+        controller.OK(selectedDate);
       }
     } else {
-      setStartDatePickerVisibility(!showStartDatePicker);
+      controller.CANCEL();
     }
   };
 
-  const handleEndDateOnChange = ({type}, selectedDate) => {
-    if (type == 'set') {
-      if (Platform.OS == 'android') {
-        setEndDatePickerVisibility(!showEndDatePicker);
-        setEndDate(selectedDate.toDateString());
-      }
-    } else {
-      setEndDatePickerVisibility(!showEndDatePicker);
-    }
-  };
+  const formatDate = date =>
+    date.toLocaleDateString(undefined, {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+    });
 
   return (
     <LinearGradient
@@ -46,25 +38,27 @@ export const AddNewBudget = () => {
       <View>
         <LabeledInputField
           label="Budget"
-          budgetAmount={budgetAmount}
+          budgetAmount={controller.budgetAmount.toString()}
           handleBudgetInput={handleBudgetInput}
           placeholder="Enter the Amount"
         />
         <PressableLabeledInputField
           label="Start Date"
-          showStartDatePicker={showStartDatePicker}
-          setStartDatePickerVisibility={setStartDatePickerVisibility}
-          startDate={startDate}
+          setDatePickerVisibility={() =>
+            controller.ON_DATE_PICKER_PRESS('startDate')
+          }
+          date={formatDate(controller.startDate)}
           placeholder="Select the Date"
         />
         <PressableLabeledInputField
           label="End Date"
-          showStartDatePicker={showEndDatePicker}
-          setStartDatePickerVisibility={setEndDatePickerVisibility}
-          startDate={endDate}
+          setDatePickerVisibility={() =>
+            controller.ON_DATE_PICKER_PRESS('endDate')
+          }
+          date={formatDate(controller.endDate)}
           placeholder="Select the Date"
         />
-        {showStartDatePicker && (
+        {controller.showStartDatePicker && (
           <DateTimePicker
             mode="date"
             display="spinner"
@@ -74,10 +68,10 @@ export const AddNewBudget = () => {
               label: 'CANCEL',
               textColor: themeColors.dodgerblue,
             }}
-            onChange={handleStartDateOnChange}
+            onChange={handleDateChange}
           />
         )}
-        {showEndDatePicker && (
+        {controller.showEndDatePicker && (
           <DateTimePicker
             mode="date"
             display="spinner"
@@ -87,7 +81,7 @@ export const AddNewBudget = () => {
               label: 'CANCEL',
               textColor: themeColors.dodgerblue,
             }}
-            onChange={handleEndDateOnChange}
+            onChange={handleDateChange}
           />
         )}
       </View>

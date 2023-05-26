@@ -1,6 +1,6 @@
 import React from 'react';
 import {Text, TextInput, View} from 'react-native';
-import {theme} from '../../Theme';
+import {theme} from '../Theme';
 
 export const LabeledInputField = props => {
   return (
