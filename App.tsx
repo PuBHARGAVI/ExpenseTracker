@@ -6,7 +6,7 @@
  */
 
 import React from 'react';
-import {Home} from './Screens/Home';
+import {Home} from './screens/Home';
 import {
   DarkTheme,
   DefaultTheme,
@@ -15,8 +15,8 @@ import {
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {SafeAreaView, StatusBar, useColorScheme} from 'react-native';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
-import {AddNewBudget} from './Screens/AddNewBudget';
-import {AddNewExpense} from './Screens/AddNewExpense';
+import {AddNewBudget} from './screens/AddNewBudget';
+import {AddNewExpense} from './screens/AddNewExpense';
 
 const Stack = createNativeStackNavigator();
 

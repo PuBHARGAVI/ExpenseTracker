@@ -3,8 +3,8 @@ import {Button, Platform, View} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import {theme, themeColors} from '../Theme';
-import {LabeledInputField} from '../Components/LabeledInputField';
-import {PressableLabeledInputField} from '../Components/PressableLabeledInputField';
+import {LabeledInputField} from '../components/LabeledInputField';
+import {PressableLabeledInputField} from '../components/PressableLabeledInputField';
 import {useAddBudgetScreen} from './AddNewBudgetController';
 
 export const AddNewBudget = () => {

@@ -7,7 +7,7 @@ import {
   selectBudgetAmount,
   selectStartDate,
   selectEndDate,
-} from '../Machines/AddBudget';
+} from '../machines/addBudget';
 
 export function useAddBudgetScreen() {
   const service = useInterpret(addBudgetModelMachine);
