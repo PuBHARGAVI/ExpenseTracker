@@ -7,6 +7,7 @@
 
 import React from 'react';
 import {Home} from './screens/Home';
+import {Budget} from './screens/Budget';
 import {
   DarkTheme,
   DefaultTheme,
@@ -44,9 +45,14 @@ function App(): JSX.Element {
           }}>
           <Stack.Screen name="Home" component={Home} />
           <Stack.Screen
-            name="Budget"
+            name="Budgets"
+            component={Budget}
+            options={{title: 'Budgets'}}
+          />
+          <Stack.Screen
+            name="AddNewBudget"
             component={AddNewBudget}
-            options={{title: 'Add a new Budget'}}
+            options={{title: 'Add New Budget'}}
           />
           <Stack.Screen
             name="Expense"

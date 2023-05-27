@@ -3,7 +3,7 @@ import {Text, StyleSheet, Pressable, View} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import {theme} from '../Theme';
 
-export const Home = ({navigation}) => {
+export const Budget = ({navigation}) => {
   return (
     <LinearGradient
       colors={['white', 'lightblue']}
@@ -18,8 +18,8 @@ export const Home = ({navigation}) => {
             },
             theme.styles.pressable,
           ]}
-          onPress={() => navigation.navigate('Budgets')}>
-          <Text style={theme.styles.title}>Budgets</Text>
+          onPress={() => navigation.navigate('AddNewBudget')}>
+          <Text style={theme.styles.title}>Add New Budget</Text>
         </Pressable>
 
         <Pressable
@@ -30,8 +30,8 @@ export const Home = ({navigation}) => {
             },
             theme.styles.pressable,
           ]}
-          onPress={() => navigation.navigate('Expense')}>
-          <Text style={theme.styles.title}>Expenses</Text>
+          onPress={() => navigation.navigate('ViewAllBudgets')}>
+          <Text style={theme.styles.title}>View All Budgets</Text>
         </Pressable>
       </View>
     </LinearGradient>

@@ -25,7 +25,7 @@ export const theme = {
       color: themeColors.black,
       flex: 0.1,
     },
-    pressable: {
+    pressableTextInput: {
       flex: 0.6,
     },
     view: {
@@ -48,9 +48,30 @@ export const theme = {
     },
     overlayText: {
       color: themeColors.black
+    },
+    pressableView: {
+      alignItems: 'flex-start',
+      flexDirection: 'row',
+      margin: 10,
+      marginTop: 30,
+      width: '100%',
+      height: '100%',
+    },
+    pressable: {
+      width: 130,
+      height: 200,
+      borderRadius: 50,
+      alignItems: 'center',
+      justifyContent: 'center',
+      margin: 10,
+      shadowColor: 'green',
+      shadowOffset: { width: 0, height: 10 },
+      elevation: 4,
+    },
+    title: {
+      fontSize: 18,
+      color: 'white',
+      fontWeight: 'bold',
     }
-  }),
-  colors: {
-
-  }
+  })
 }

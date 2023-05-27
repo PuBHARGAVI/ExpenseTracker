@@ -38,7 +38,7 @@ export const addBudgetModelMachine = model.createMachine({
         context: model.initialContext,
         events: {} as EventFrom<typeof model>,
     },
-    id: 'AddExpenseModel',
+    id: 'AddBudgetModel',
     initial: 'acceptingBudgetInput',
     states: {
         acceptingBudgetInput: {

@@ -8,7 +8,7 @@ export const PressableLabeledInputField = props => {
       <Text style={theme.styles.label}>{props.label}</Text>
       <Text style={theme.styles.colon}>:</Text>
       <Pressable
-        style={theme.styles.pressable}
+        style={theme.styles.pressableTextInput}
         onPress={() => {
           props.setDatePickerVisibility();
         }}>
