@@ -73,5 +73,41 @@ export const theme = {
       color: 'white',
       fontWeight: 'bold',
     }
+  }),
+  viewAllBudgetStyles: StyleSheet.create({
+    linearGradientContainer: {
+      flex: 1,
+      alignItems: 'center',
+    },
+    headerContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      width: '100%',
+      borderRadius: 10,
+      padding: 10,
+    },
+    touchableContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      width: '100%',
+      backgroundColor: 'darkgray',
+      borderRadius: 10,
+      padding: 10,
+      marginBottom: 5,
+    },
+    headerText: {
+      flex: 0.3,
+      textAlign: 'center',
+      color: 'grey',
+      fontWeight: 'bold',
+      fontSize: 20,
+    },
+    touchableText: {
+      flex: 0.3,
+      textAlign: 'center',
+      color: 'black',
+      fontWeight: 'bold',
+      fontSize: 15,
+    },
   })
 }

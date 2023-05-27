@@ -1,6 +1,6 @@
 import { createModel } from "xstate/lib/model";
 import { EventFrom } from "xstate";
-import { storeBudget } from "./storeUtils";
+import { storeBudget, getAllBudgets } from "./storeUtils";
 import { sendTo } from 'xstate';
 import { sendParent } from "xstate/lib/actions";
 
@@ -12,11 +12,12 @@ const model = createModel({
       ADD_BUDGET: (amount: Number, startDate: Date, endDate: Date) => ({ amount, startDate, endDate }),
       STORE_RESPONSE: (response: unknown) => ({ response }),
       STORE_ERROR: (error: Error) => ({ error }),
+      VIEW_ALL_BUDGETS: () => ({})
     }
   }
 );
 const getBudgetKey = (budget: Budget) => {
-  return `amount:${budget.amount},startDate:${budget.startDate},endDate:${budget.endDate}`
+  return `{"amount":${budget.amount},"startDate":"${budget.startDate}","endDate":"${budget.endDate}"}`;
 }
 
 export const storeEvents = model.events;
@@ -43,6 +44,11 @@ export const storeModelMachine = model.createMachine(
                 switch (event.type) {
                   case "ADD_BUDGET": {
                     response = await storeBudget(getBudgetKey(event))
+                    break;
+                  }
+                  case "VIEW_ALL_BUDGETS": {
+                    response = await getAllBudgets()
+                    break;
                   }
                 }
                 callback(model.events.STORE_RESPONSE(response))
@@ -55,6 +61,9 @@ export const storeModelMachine = model.createMachine(
         },
         on: {
           ADD_BUDGET: {
+            actions: ['sendEventToStoreService']
+          },
+          VIEW_ALL_BUDGETS: {
             actions: ['sendEventToStoreService']
           },
           STORE_RESPONSE: {

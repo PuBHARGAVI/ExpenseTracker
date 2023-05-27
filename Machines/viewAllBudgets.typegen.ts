@@ -16,7 +16,8 @@ export interface Typegen0 {
     services: never;
   };
   eventsCausingActions: {
-    "sendEventToStoreService": "ADD_BUDGET" | "VIEW_ALL_BUDGETS";
+    "loadAllBudgets": "xstate.init";
+    "setStoreResponse": "STORE_RESPONSE";
   };
   eventsCausingDelays: {
 
@@ -25,8 +26,8 @@ export interface Typegen0 {
 
   };
   eventsCausingServices: {
-    "store_service": "xstate.init";
+
   };
-  matchesStates: "ready";
+  matchesStates: "loadingAllBudgets";
   tags: never;
 }

@@ -18,6 +18,7 @@ import {SafeAreaView, StatusBar, useColorScheme} from 'react-native';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import {AddNewBudget} from './screens/AddNewBudget';
 import {AddNewExpense} from './screens/AddNewExpense';
+import {ViewAllBudgets} from './screens/ViewAllBudgets';
 
 const Stack = createNativeStackNavigator();
 
@@ -58,6 +59,11 @@ function App(): JSX.Element {
             name="Expense"
             component={AddNewExpense}
             options={{title: 'Add a new Expense'}}
+          />
+          <Stack.Screen
+            name="ViewAllBudgets"
+            component={ViewAllBudgets}
+            options={{title: 'View All Budgets'}}
           />
         </Stack.Navigator>
       </NavigationContainer>

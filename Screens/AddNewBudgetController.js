@@ -9,7 +9,6 @@ import {
   selectEndDate,
   selectStoreStatus,
 } from '../machines/AddBudget';
-import {storeModelMachine} from '../machines/store';
 
 export function useAddBudgetScreen() {
   const service = useInterpret(addBudgetModelMachine);
