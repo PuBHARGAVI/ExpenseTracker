@@ -4,6 +4,7 @@ export const themeColors = {
   dodgerblue: '#1e90ff',
   dimgray: '#696969',
   black: '#000000',
+  white: '#ffffff'
 }
 
 export const theme = {
@@ -40,6 +41,14 @@ export const theme = {
       fontSize: 17,
       flex: 0.3,
     },
+    overlay: {
+      elevation: 5,
+      backgroundColor: themeColors.white,
+      padding: 15,
+    },
+    overlayText: {
+      color: themeColors.black
+    }
   }),
   colors: {
 

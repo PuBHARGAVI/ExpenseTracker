@@ -1,6 +1,7 @@
-import { EventFrom, StateFrom } from 'xstate';
+import { EventFrom, StateFrom, ActorRefFrom, spawn } from 'xstate';
 import { createModel } from 'xstate/lib/model';
-
+import { storeEvents } from './store';
+import { storeModelMachine } from './store';
 
 const model = createModel(
     {
@@ -10,15 +11,19 @@ const model = createModel(
         showStartDatePicker: false as boolean,
         showEndDatePicker: false as boolean,
         activeDatePicker: "" as string,
+        storeStatus: "" as string,
+        serviceRefs: {} as AppServices
     },
     {
         events: {
             ADD_AMOUNT: (amount: Number) => ({ amount }),
-            ADD_START_DATE: (startDate: string, operationType: string, platform: string) => ({ startDate, operationType, platform }),
-            ADD_END_DATE: (endDate: string, operationType: string, platform: string) => ({ endDate, operationType, platform }),
+            ADD_BUDGET: () => ({}),
             ON_DATE_PICKER_PRESS: (pickerType: string) => ({ pickerType }),
             OK: (date: string) => ({ date }),
-            CANCEL: () => ({})
+            CANCEL: () => ({}),
+            STORE_RESPONSE: (response: string) => ({ response }),
+            STORE_ERROR: (error: Error) => ({ error }),
+            RESET_STORE_STATUS: () => ({})
         }
     }
 )
@@ -37,20 +42,35 @@ export const addBudgetModelMachine = model.createMachine({
     initial: 'acceptingBudgetInput',
     states: {
         acceptingBudgetInput: {
+            entry: model.assign({
+                serviceRefs: (context) => {
+                    const serviceRefs = {
+                        ...context.serviceRefs,
+                    };
+                    serviceRefs.store = spawn(storeModelMachine);
+                    return serviceRefs;
+                }
+            }),
             on: {
                 ADD_AMOUNT: {
                     actions: ['setBudgetAmount']
-                },
-                ADD_START_DATE: {
-                    actions: ['setStartDate']
                 },
                 ON_DATE_PICKER_PRESS: {
                     actions: ['setActiveDatePicker'],
                     target: 'handleDatePicker'
                 },
-                ADD_END_DATE: {
-                    actions: ['setEndDate']
+                ADD_BUDGET: {
+                    actions: ['storeTheBudget']
                 },
+                STORE_RESPONSE: {
+                    actions: ['setStoreResponse']
+                },
+                STORE_ERROR: {
+                    actions: ['setStoreError']
+                },
+                RESET_STORE_STATUS: {
+                    actions: ['resetStoreStatus']
+                }
             }
         },
         handleDatePicker: {
@@ -84,6 +104,22 @@ export const addBudgetModelMachine = model.createMachine({
         }),
         setActiveDatePicker: model.assign({
             activeDatePicker: (_context, event) => event.pickerType
+        }),
+        storeTheBudget: (context) => {
+            context.serviceRefs.store.send(storeEvents.ADD_BUDGET(
+                context.amount,
+                context.startDate,
+                context.endDate
+            ))
+        },
+        setStoreResponse: model.assign({
+            storeStatus: (_context, event) => event.response.toString()
+        }),
+        setStoreError: model.assign({
+            storeStatus: (_context, event) => event.error.toString()
+        }),
+        resetStoreStatus: model.assign({
+            storeStatus: () => ""
         })
     }
 })
@@ -108,4 +144,12 @@ export function selectStartDate(state: State) {
 
 export function selectEndDate(state: State) {
     return state.context.endDate;
+}
+
+export function selectStoreStatus(state: State) {
+    return state.context.storeStatus;
+}
+
+export interface AppServices {
+    store: ActorRefFrom<typeof storeModelMachine>;
 }

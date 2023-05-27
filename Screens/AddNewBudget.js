@@ -6,6 +6,7 @@ import {theme, themeColors} from '../Theme';
 import {LabeledInputField} from '../components/LabeledInputField';
 import {PressableLabeledInputField} from '../components/PressableLabeledInputField';
 import {useAddBudgetScreen} from './AddNewBudgetController';
+import {MessageOverlay} from '../components/MessageOverlay';
 
 export const AddNewBudget = () => {
   const controller = useAddBudgetScreen();
@@ -35,6 +36,11 @@ export const AddNewBudget = () => {
       start={{x: 0, y: 0}}
       end={{x: 1, y: 1}}
       style={theme.styles.linearGradient}>
+      <MessageOverlay
+        isVisible={controller.storeStatus != ''}
+        message={controller.storeStatus}
+        onDismiss={controller.RESET_STORE_STATUS}
+      />
       <View>
         <LabeledInputField
           label="Budget"
@@ -85,7 +91,7 @@ export const AddNewBudget = () => {
           />
         )}
       </View>
-      <Button title="Add the budget" />
+      <Button title="Add the budget" onPress={controller.ADD_BUDGET} />
     </LinearGradient>
   );
 };

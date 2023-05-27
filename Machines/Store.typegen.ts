@@ -16,14 +16,7 @@ export interface Typegen0 {
     services: never;
   };
   eventsCausingActions: {
-    "resetStoreStatus": "RESET_STORE_STATUS";
-    "setActiveDatePicker": "ON_DATE_PICKER_PRESS";
-    "setBudgetAmount": "ADD_AMOUNT";
-    "setDate": "OK";
-    "setStoreError": "STORE_ERROR";
-    "setStoreResponse": "STORE_RESPONSE";
-    "storeTheBudget": "ADD_BUDGET";
-    "toggleDatePickerVisibility": "CANCEL" | "OK" | "ON_DATE_PICKER_PRESS";
+    "sendEventToStoreService": "ADD_BUDGET";
   };
   eventsCausingDelays: {
 
@@ -32,8 +25,8 @@ export interface Typegen0 {
 
   };
   eventsCausingServices: {
-
+    "store_service": "xstate.init";
   };
-  matchesStates: "acceptingBudgetInput" | "handleDatePicker";
+  matchesStates: "ready";
   tags: never;
 }
