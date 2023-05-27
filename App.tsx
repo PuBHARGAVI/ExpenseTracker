@@ -63,7 +63,10 @@ function App(): JSX.Element {
           <Stack.Screen
             name="ViewAllBudgets"
             component={ViewAllBudgets}
-            options={{title: 'View All Budgets'}}
+            options={{
+              title: 'View All Budgets',
+              headerBackVisible: false,
+            }}
           />
         </Stack.Navigator>
       </NavigationContainer>

@@ -1,10 +1,16 @@
-import React from 'react';
-import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import React, {useEffect} from 'react';
+import {
+  FlatList,
+  Text,
+  TouchableOpacity,
+  View,
+  BackHandler,
+} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import {useViewAllBudgetsScreen} from './ViewAllBudgetsController';
 import {theme} from '../Theme';
 
-export const ViewAllBudgets = () => {
+export const ViewAllBudgets = ({navigation}) => {
   const controller = useViewAllBudgetsScreen();
   const budgetList = controller.budgets;
 
@@ -14,6 +20,22 @@ export const ViewAllBudgets = () => {
       day: 'numeric',
       year: 'numeric',
     });
+
+  const handleBackButton = () => {
+    navigation.navigate('Budgets');
+    return true;
+  };
+
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      handleBackButton,
+    );
+
+    return () => {
+      backHandler.remove();
+    };
+  }, []);
 
   const renderItem = ({item}) => {
     const {amount, startDate, endDate} = JSON.parse(item);

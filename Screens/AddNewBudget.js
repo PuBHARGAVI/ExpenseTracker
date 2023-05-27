@@ -8,7 +8,7 @@ import {PressableLabeledInputField} from '../components/PressableLabeledInputFie
 import {useAddBudgetScreen} from './AddNewBudgetController';
 import {MessageOverlay} from '../components/MessageOverlay';
 
-export const AddNewBudget = () => {
+export const AddNewBudget = ({navigation}) => {
   const controller = useAddBudgetScreen();
 
   const handleBudgetInput = amount => controller.ADD_AMOUNT(Number(amount));
@@ -39,7 +39,10 @@ export const AddNewBudget = () => {
       <MessageOverlay
         isVisible={controller.storeStatus != ''}
         message={controller.storeStatus}
-        onDismiss={controller.RESET_STORE_STATUS}
+        onDismiss={() => {
+          controller.RESET_STORE_STATUS;
+          navigation.navigate('ViewAllBudgets');
+        }}
       />
       <View>
         <LabeledInputField
