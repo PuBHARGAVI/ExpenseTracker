@@ -7,7 +7,7 @@ export const MessageOverlay = props => {
     <Overlay
       isVisible={props.isVisible}
       overlayStyle={theme.styles.overlay}
-      onBackdropPress={props.onDismiss}>
+      onBackdropPress={props.onDismiss()}>
       <Text style={theme.styles.overlayText}>{props.message}</Text>
     </Overlay>
   );

@@ -5,7 +5,7 @@ import { AppServices } from "./AddBudget";
 import { storeModelMachine } from "./store";
 
 const model = createModel({
-  budgets: {},
+  budgets: {} as unknown,
   serviceRefs: {} as AppServices
 }, {
   events: {
@@ -48,11 +48,9 @@ export const viewAllBudgetsModel = model.createMachine({
     loadAllBudgets: (context) => {
       context.serviceRefs.store.send(storeEvents.VIEW_ALL_BUDGETS())
     },
-    setStoreResponse: model.assign({
-      budgets: (_context, events) => {
-        return events.response
-      }
-    })
+    setStoreResponse: model.assign((context, event) => {
+      return { ...context, budgets: event.response };
+    }),
   }
 })
 

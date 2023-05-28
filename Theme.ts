@@ -109,5 +109,38 @@ export const theme = {
       fontWeight: 'bold',
       fontSize: 15,
     },
+  }),
+  addNewExpenseStyles: StyleSheet.create({
+    linearGradientContainer: {
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'space-around',
+    },
+    pickerView: {
+      width: '100%',
+      borderWidth: 1,
+      borderColor: themeColors.dodgerblue,
+      borderRadius: 15,
+
+    },
+    budgetView: {
+      marginTop: 15,
+    },
+    labelView: {
+      flexDirection: 'row',
+      width: '100%',
+      marginBottom: 10,
+      alignItems: 'flex-start'
+
+    },
+    label: {
+      color: themeColors.black,
+      fontWeight: '500',
+      fontSize: 17,
+      flex: 0.3,
+    },
+    picker: {
+      margin: 1,
+    }
   })
 }

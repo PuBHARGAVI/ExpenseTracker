@@ -23,3 +23,25 @@ export const storeBudget = async budgetKey => {
     throw error;
   }
 };
+
+export const getAllExpenses = async budgetKey => {
+  try {
+    const expenses = await mmkv.getItem(budgetKey);
+
+    return JSON.parse(expenses);
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const storeExpense = async (budgetKey, newExpense) => {
+  try {
+    let expenses = await getAllExpenses(budgetKey);
+    const newExpenseList = expenses ? [...expenses, newExpense] : [newExpense];
+
+    await mmkv.setItem(budgetKey, JSON.stringify(newExpenseList));
+    return 'Expense details are successfully stored!';
+  } catch (error) {
+    throw error;
+  }
+};

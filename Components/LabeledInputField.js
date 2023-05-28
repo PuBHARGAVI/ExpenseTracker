@@ -14,12 +14,12 @@ export const LabeledInputField = props => {
             flex: 0.6,
           },
         ]}
-        keyboardType="numeric"
+        keyboardType={props.keyboardType}
         placeholder={props.placeholder}
         placeholderTextColor="#696969"
-        value={props.budgetAmount}
+        value={props.value}
         autoFocus={true}
-        onChangeText={text => props.handleBudgetInput(text)}
+        onChangeText={text => props.onChange(text)}
       />
     </View>
   );

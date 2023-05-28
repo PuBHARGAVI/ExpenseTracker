@@ -17,6 +17,7 @@ export interface Typegen0 {
   };
   eventsCausingActions: {
     "resetStoreStatus": "RESET_STORE_STATUS";
+    "resetTheFields": "ADD_BUDGET";
     "setActiveDatePicker": "ON_DATE_PICKER_PRESS";
     "setBudgetAmount": "ADD_AMOUNT";
     "setDate": "OK";

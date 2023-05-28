@@ -65,7 +65,6 @@ function App(): JSX.Element {
             component={ViewAllBudgets}
             options={{
               title: 'View All Budgets',
-              headerBackVisible: false,
             }}
           />
         </Stack.Navigator>

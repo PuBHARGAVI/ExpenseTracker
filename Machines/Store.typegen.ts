@@ -16,7 +16,7 @@ export interface Typegen0 {
     services: never;
   };
   eventsCausingActions: {
-    "sendEventToStoreService": "ADD_BUDGET" | "VIEW_ALL_BUDGETS";
+    "sendEventToStoreService": "ADD_BUDGET" | "ADD_EXPENSE" | "VIEW_ALL_BUDGETS";
   };
   eventsCausingDelays: {
 

@@ -60,7 +60,7 @@ export const addBudgetModelMachine = model.createMachine({
                     target: 'handleDatePicker'
                 },
                 ADD_BUDGET: {
-                    actions: ['storeTheBudget']
+                    actions: ['storeTheBudget', 'resetTheFields']
                 },
                 STORE_RESPONSE: {
                     actions: ['setStoreResponse']
@@ -120,7 +120,12 @@ export const addBudgetModelMachine = model.createMachine({
         }),
         resetStoreStatus: model.assign({
             storeStatus: () => ""
-        })
+        }),
+        resetTheFields: model.assign({
+            amount: () => 0,
+            startDate: () => new Date() as Date,
+            endDate: () => new Date() as Date,
+        }),
     }
 })
 

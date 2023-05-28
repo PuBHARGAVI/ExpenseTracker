@@ -1,6 +1,6 @@
 import { createModel } from "xstate/lib/model";
 import { EventFrom } from "xstate";
-import { storeBudget, getAllBudgets } from "./storeUtils";
+import { storeBudget, getAllBudgets, storeExpense } from "../utils/storeUtils";
 import { sendTo } from 'xstate';
 import { sendParent } from "xstate/lib/actions";
 
@@ -12,12 +12,18 @@ const model = createModel({
       ADD_BUDGET: (amount: Number, startDate: Date, endDate: Date) => ({ amount, startDate, endDate }),
       STORE_RESPONSE: (response: unknown) => ({ response }),
       STORE_ERROR: (error: Error) => ({ error }),
-      VIEW_ALL_BUDGETS: () => ({})
+      ADD_EXPENSE: (budgetKey: string, amount: Number, description: string, date: Date) => ({ budgetKey, amount, description, date }),
+      VIEW_ALL_BUDGETS: () => ({}),
+
     }
   }
 );
 const getBudgetKey = (budget: Budget) => {
   return `{"amount":${budget.amount},"startDate":"${budget.startDate}","endDate":"${budget.endDate}"}`;
+}
+
+const getExpenseKey = (expense: Expense) => {
+  return `{"amount":${expense.amount},"description":"${expense.description}","date":"${expense.date}"}`;
 }
 
 export const storeEvents = model.events;
@@ -46,6 +52,10 @@ export const storeModelMachine = model.createMachine(
                     response = await storeBudget(getBudgetKey(event))
                     break;
                   }
+                  case "ADD_EXPENSE": {
+                    response = await storeExpense(event.budgetKey, getExpenseKey(event))
+                    break;
+                  }
                   case "VIEW_ALL_BUDGETS": {
                     response = await getAllBudgets()
                     break;
@@ -64,6 +74,9 @@ export const storeModelMachine = model.createMachine(
             actions: ['sendEventToStoreService']
           },
           VIEW_ALL_BUDGETS: {
+            actions: ['sendEventToStoreService']
+          },
+          ADD_EXPENSE: {
             actions: ['sendEventToStoreService']
           },
           STORE_RESPONSE: {
@@ -100,4 +113,11 @@ type Budget = {
   amount: Number,
   startDate: Date,
   endDate: Date
+}
+
+type Expense = {
+  amount: Number,
+  description: string,
+  date: Date,
+  budget: string
 }

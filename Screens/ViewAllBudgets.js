@@ -9,17 +9,11 @@ import {
 import LinearGradient from 'react-native-linear-gradient';
 import {useViewAllBudgetsScreen} from './ViewAllBudgetsController';
 import {theme} from '../Theme';
+import {formatDate} from '../utils/dateUtils';
 
 export const ViewAllBudgets = ({navigation}) => {
   const controller = useViewAllBudgetsScreen();
   const budgetList = controller.budgets;
-
-  const formatDate = date =>
-    new Date(date).toLocaleDateString(undefined, {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric',
-    });
 
   const handleBackButton = () => {
     navigation.navigate('Budgets');
@@ -39,8 +33,8 @@ export const ViewAllBudgets = ({navigation}) => {
 
   const renderItem = ({item}) => {
     const {amount, startDate, endDate} = JSON.parse(item);
-    formattedStartDate = formatDate(startDate);
-    formattedEndDate = formatDate(endDate);
+    formattedStartDate = formatDate(new Date(startDate));
+    formattedEndDate = formatDate(new Date(endDate));
     return (
       <TouchableOpacity
         activeOpacity={0.7}

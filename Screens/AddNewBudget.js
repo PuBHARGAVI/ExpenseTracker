@@ -7,6 +7,7 @@ import {LabeledInputField} from '../components/LabeledInputField';
 import {PressableLabeledInputField} from '../components/PressableLabeledInputField';
 import {useAddBudgetScreen} from './AddNewBudgetController';
 import {MessageOverlay} from '../components/MessageOverlay';
+import {formatDate} from '../utils/dateUtils';
 
 export const AddNewBudget = ({navigation}) => {
   const controller = useAddBudgetScreen();
@@ -23,13 +24,6 @@ export const AddNewBudget = ({navigation}) => {
     }
   };
 
-  const formatDate = date =>
-    date.toLocaleDateString(undefined, {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric',
-    });
-
   return (
     <LinearGradient
       colors={['white', 'lightblue']}
@@ -40,16 +34,16 @@ export const AddNewBudget = ({navigation}) => {
         isVisible={controller.storeStatus != ''}
         message={controller.storeStatus}
         onDismiss={() => {
-          controller.RESET_STORE_STATUS;
-          navigation.navigate('ViewAllBudgets');
+          return controller.RESET_STORE_STATUS;
         }}
       />
       <View>
         <LabeledInputField
           label="Budget"
-          budgetAmount={controller.budgetAmount.toString()}
-          handleBudgetInput={handleBudgetInput}
+          value={controller.budgetAmount.toString()}
+          onChange={handleBudgetInput}
           placeholder="Enter the Amount"
+          keyboardType="numeric"
         />
         <PressableLabeledInputField
           label="Start Date"
