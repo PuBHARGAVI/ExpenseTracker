@@ -1,7 +1,7 @@
 import React from 'react';
 import {Text, StyleSheet, Pressable, View} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import {theme} from '../Theme';
+import {theme, themeColors} from '../Theme';
 
 export const Home = ({navigation}) => {
   return (
@@ -14,7 +14,7 @@ export const Home = ({navigation}) => {
           style={({pressed}) => [
             {
               opacity: pressed ? 0.7 : 1,
-              backgroundColor: pressed ? '#000080' : '#1e90ff',
+              backgroundColor: themeColors.lightseagreen,
             },
             theme.styles.pressable,
           ]}
@@ -26,7 +26,7 @@ export const Home = ({navigation}) => {
           style={({pressed}) => [
             {
               opacity: pressed ? 0.7 : 1,
-              backgroundColor: pressed ? '#000080' : '#1e90ff',
+              backgroundColor: themeColors.lightseagreen,
             },
             theme.styles.pressable,
           ]}

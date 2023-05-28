@@ -19,6 +19,7 @@ import {Colors} from 'react-native/Libraries/NewAppScreen';
 import {AddNewBudget} from './screens/AddNewBudget';
 import {AddNewExpense} from './screens/AddNewExpense';
 import {ViewAllBudgets} from './screens/ViewAllBudgets';
+import {themeColors} from './Theme';
 
 const Stack = createNativeStackNavigator();
 
@@ -41,10 +42,14 @@ function App(): JSX.Element {
           screenOptions={{
             headerTitleAlign: 'center',
             headerTitleStyle: {
-              color: '#1e90ff',
+              color: themeColors.dodgerblue,
             },
           }}>
-          <Stack.Screen name="Home" component={Home} />
+          <Stack.Screen
+            name="Home"
+            component={Home}
+            options={{title: 'Budget & Expenses Tracker'}}
+          />
           <Stack.Screen
             name="Budgets"
             component={Budget}
