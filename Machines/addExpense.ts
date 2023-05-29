@@ -27,7 +27,8 @@ const model = createModel(
       CANCEL: () => ({}),
       RESET_STORE_STATUS: () => ({}),
       ON_BUDGET_SELECTION: (budgetKey: string) => ({ budgetKey }),
-      STORE_RESPONSE: (response: any) => ({ response })
+      STORE_RESPONSE: (response: any) => ({ response }),
+      STORE_ERROR: (error: Error) => ({ error }),
     }
   }
 )
@@ -86,6 +87,9 @@ export const addExpenseModelMachine = model.createMachine({
         STORE_RESPONSE: {
           actions: ['setStoreResponse']
         },
+        STORE_ERROR: {
+          actions: ['setStoreError']
+        }
       }
     },
     handleDatePicker: {
@@ -119,6 +123,13 @@ export const addExpenseModelMachine = model.createMachine({
     }),
     setStoreResponse: model.assign((context, event) => {
       return { ...context, storeStatus: event.response.toString() };
+    }),
+    setStoreError: model.assign({
+      storeStatus: (_context, event) => {
+        const message = event.error.message.split(":")
+
+        return message[0];
+      }
     }),
     setExpenseAmount: model.assign({
       amount: (_context, event) => event.amount

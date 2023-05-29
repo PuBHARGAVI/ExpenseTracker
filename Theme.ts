@@ -1,4 +1,5 @@
 import { StyleSheet } from "react-native";
+import { Platform } from "react-native";
 
 export const themeColors = {
   dodgerblue: '#1e90ff',
@@ -8,6 +9,8 @@ export const themeColors = {
   lightseagreen: '#20b2aa',
   lightgrey: '#d3d3d3'
 }
+
+export const fontFamily = (Platform.OS == "android") ? 'sans-serif-light' : 'System';
 
 export const theme = {
   styles: StyleSheet.create({
@@ -22,10 +25,11 @@ export const theme = {
       color: themeColors.dimgray,
     },
     colon: {
-      fontWeight: '500',
+      fontWeight: 'bold',
       fontSize: 17,
       color: themeColors.black,
       flex: 0.1,
+      fontFamily: fontFamily
     },
     pressableTextInput: {
       flex: 0.6,
@@ -39,9 +43,10 @@ export const theme = {
     },
     label: {
       color: themeColors.black,
-      fontWeight: '500',
+      fontWeight: 'bold',
       fontSize: 17,
       flex: 0.3,
+      fontFamily: fontFamily
     },
     overlay: {
       elevation: 5,
@@ -56,6 +61,8 @@ export const theme = {
     overlayText: {
       color: themeColors.black,
       fontSize: 18,
+      fontWeight: '400',
+      fontFamily: fontFamily
     },
     pressableView: {
       margin: 10,
@@ -72,12 +79,12 @@ export const theme = {
       shadowColor: 'green',
       shadowOffset: { width: 0, height: 10 },
       elevation: 4,
-      // backgroundColor: 'red'
     },
     title: {
       fontSize: 18,
       color: 'white',
       fontWeight: 'bold',
+      fontFamily: fontFamily
     }
   }),
   viewAllBudgetStyles: StyleSheet.create({
@@ -107,6 +114,7 @@ export const theme = {
       color: themeColors.lightseagreen,
       fontWeight: 'bold',
       fontSize: 20,
+      fontFamily: fontFamily
     },
     touchableText: {
       flex: 0.3,
@@ -114,6 +122,7 @@ export const theme = {
       color: 'black',
       fontWeight: 'bold',
       fontSize: 15,
+      fontFamily: fontFamily
     },
   }),
   addNewExpenseStyles: StyleSheet.create({
@@ -141,7 +150,8 @@ export const theme = {
     },
     label: {
       color: themeColors.black,
-      fontWeight: '500',
+      fontWeight: 'bold',
+      fontFamily: fontFamily,
       fontSize: 17,
       flex: 0.3,
     },

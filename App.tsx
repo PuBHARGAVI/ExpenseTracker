@@ -19,7 +19,7 @@ import {Colors} from 'react-native/Libraries/NewAppScreen';
 import {AddNewBudget} from './screens/AddNewBudget';
 import {AddNewExpense} from './screens/AddNewExpense';
 import {ViewAllBudgets} from './screens/ViewAllBudgets';
-import {themeColors} from './Theme';
+import {themeColors, fontFamily} from './Theme';
 
 const Stack = createNativeStackNavigator();
 
@@ -43,6 +43,8 @@ function App(): JSX.Element {
             headerTitleAlign: 'center',
             headerTitleStyle: {
               color: themeColors.dodgerblue,
+              fontFamily: fontFamily,
+              fontWeight: 'bold',
             },
           }}>
           <Stack.Screen

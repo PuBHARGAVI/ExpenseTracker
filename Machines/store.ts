@@ -64,6 +64,7 @@ export const storeModelMachine = model.createMachine(
                 callback(model.events.STORE_RESPONSE(response))
               }
               catch (error: any) {
+                console.log("store error:", error)
                 callback(model.events.STORE_ERROR(error))
               }
             })

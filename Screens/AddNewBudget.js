@@ -39,7 +39,7 @@ export const AddNewBudget = ({navigation}) => {
       />
       <View>
         <LabeledInputField
-          label="Budget"
+          label="Amount"
           value={controller.budgetAmount.toString()}
           onChange={handleBudgetInput}
           placeholder="Enter the Amount"

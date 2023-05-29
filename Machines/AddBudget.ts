@@ -116,7 +116,11 @@ export const addBudgetModelMachine = model.createMachine({
             storeStatus: (_context, event) => event.response.toString()
         }),
         setStoreError: model.assign({
-            storeStatus: (_context, event) => event.error.toString()
+            storeStatus: (_context, event) => {
+                const message = event.error.message.split(":")
+
+                return message[0];
+            }
         }),
         resetStoreStatus: model.assign({
             storeStatus: () => ""
