@@ -14,6 +14,7 @@ export const getPickerValue = budget => {
   const formattedStartDate = formatDate(new Date(budget.startDate));
   const formattedEndDate = formatDate(new Date(budget.endDate));
   const pickerValue = `${formattedStartDate}  -  ${formattedEndDate}  -  ${budget.amount}`;
+
   return pickerValue;
 };
 
@@ -22,6 +23,7 @@ export const AddNewExpense = () => {
   const controller = useAddBudgetScreen();
 
   if (controller.budgets.length > 0) {
+    console.log('array:', controller.budgets);
     parsedData = controller.budgets.map(item => JSON.parse(item));
   }
 
@@ -56,8 +58,9 @@ export const AddNewExpense = () => {
         isVisible={controller.storeStatus != ''}
         message={controller.storeStatus}
         onDismiss={() => {
-          return controller.RESET_STORE_STATUS;
+          return controller.DISMISS;
         }}
+        budgetExceededInfo={controller.budgetExceededInfo}
       />
       <View>
         <LabeledInputField

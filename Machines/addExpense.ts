@@ -4,6 +4,7 @@ import { EventFrom, StateFrom, spawn } from "xstate";
 import { storeModelMachine } from "./store";
 import { storeEvents } from "./store";
 import { getPickerValue } from "../screens/AddNewExpense";
+import { isBudgetLimitedExceed } from "../utils/expenseUtils";
 
 const model = createModel(
   {
@@ -15,6 +16,7 @@ const model = createModel(
     serviceRefs: {} as AppServices,
     budgetKey: "" as string,
     budgets: {} as unknown,
+    budgetExceededInfo: "" as string,
     storeResponse: "" as string,
   },
   {
@@ -29,6 +31,7 @@ const model = createModel(
       ON_BUDGET_SELECTION: (budgetKey: string) => ({ budgetKey }),
       STORE_RESPONSE: (response: any) => ({ response }),
       STORE_ERROR: (error: Error) => ({ error }),
+      DISMISS: () => ({})
     }
   }
 )
@@ -76,7 +79,7 @@ export const addExpenseModelMachine = model.createMachine({
           target: 'handleDatePicker'
         },
         ADD_EXPENSE: {
-          actions: ['storeTheExpense', 'resetTheFields']
+          actions: ['storeTheExpense'],
         },
         RESET_STORE_STATUS: {
           actions: ['resetStoreStatus']
@@ -85,10 +88,27 @@ export const addExpenseModelMachine = model.createMachine({
           actions: ['setTheSelectedBudgetKey']
         },
         STORE_RESPONSE: {
-          actions: ['setStoreResponse']
+          actions: ['setStoreResponse'],
+          target: 'checkingBudgetStatus'
         },
         STORE_ERROR: {
           actions: ['setStoreError']
+        }
+      }
+    },
+    checkingBudgetStatus: {
+      invoke: {
+        src: 'checkIfBudgetLimitIsExceeded',
+        onDone: {
+        },
+        onError: {
+          actions: ['setBudgetExceededInfo'],
+        }
+      },
+      on: {
+        DISMISS: {
+          actions: ['resetTheFields'],
+          target: 'acceptingExpenseInput'
         }
       }
     },
@@ -154,14 +174,28 @@ export const addExpenseModelMachine = model.createMachine({
     setTheSelectedBudgetKey: model.assign({
       budgetKey: (_context, event) => event.budgetKey
     }),
-    resetStoreStatus: model.assign({
-      storeStatus: () => ""
-    }),
     resetTheFields: model.assign({
       amount: () => 0,
-      description: () => "",
+      description: () => "" as string,
       date: () => new Date() as Date,
+      storeStatus: () => "",
+      budgetExceededInfo: () => ""
     }),
+    setBudgetExceededInfo: model.assign((context, event) => {
+      const message = event.data.message.split(":")
+
+      return {
+        ...context,
+        budgetExceededInfo: message[0]
+      }
+    })
+  },
+  services: {
+    checkIfBudgetLimitIsExceeded: async (context) => {
+      const response = await isBudgetLimitedExceed(context.budgetKey);
+
+      return response;
+    }
   }
 })
 
@@ -193,4 +227,8 @@ export function selectBudgetList(state: State) {
 
 export function selectBudgetKey(state: State) {
   return state.context.budgetKey;
+}
+
+export function selectBudgetExceededInfo(state: State) {
+  return state.context.budgetExceededInfo;
 }

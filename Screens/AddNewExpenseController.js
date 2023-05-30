@@ -9,6 +9,7 @@ import {
   selectDatePickerVisibility,
   selectBudgetList,
   selectBudgetKey,
+  selectBudgetExceededInfo,
 } from '../machines/addExpense';
 
 export function useAddBudgetScreen() {
@@ -25,6 +26,7 @@ export function useAddBudgetScreen() {
     RESET_STORE_STATUS: () => service.send(events.RESET_STORE_STATUS()),
     ON_BUDGET_SELECTION: budgetKey =>
       service.send(events.ON_BUDGET_SELECTION(budgetKey)),
+    DISMISS: () => service.send(events.DISMISS()),
     showDatePicker: useSelector(service, selectDatePickerVisibility),
     expenseAmount: useSelector(service, selectExpenseAmount),
     expenseDescription: useSelector(service, selectExpenseDescription),
@@ -32,5 +34,6 @@ export function useAddBudgetScreen() {
     date: useSelector(service, selectExpenseDate),
     budgets: useSelector(service, selectBudgetList),
     budgetKey: useSelector(service, selectBudgetKey),
+    budgetExceededInfo: useSelector(service, selectBudgetExceededInfo),
   };
 }

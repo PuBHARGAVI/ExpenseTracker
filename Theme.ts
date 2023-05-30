@@ -7,7 +7,8 @@ export const themeColors = {
   black: '#000000',
   white: '#ffffff',
   lightseagreen: '#20b2aa',
-  lightgrey: '#d3d3d3'
+  lightgrey: '#d3d3d3',
+  lightOrange: '#f0ad4e'
 }
 
 export const fontFamily = (Platform.OS == "android") ? 'sans-serif-light' : 'System';
@@ -51,18 +52,31 @@ export const theme = {
     overlay: {
       elevation: 5,
       backgroundColor: themeColors.white,
-      padding: 15,
       borderRadius: 10,
       width: '90%',
-      height: 100,
-      alignItems: 'center',
-      justifyContent: 'center'
+      alignItems: 'flex-start',
+      alignContent: 'flex-start',
+      justifyContent: 'space-between'
     },
     overlayText: {
       color: themeColors.black,
       fontSize: 18,
       fontWeight: '400',
-      fontFamily: fontFamily
+      fontFamily: fontFamily,
+    },
+    warningLabel: {
+      color: themeColors.lightOrange,
+      fontSize: 18,
+      fontWeight: 'bold',
+      fontFamily: fontFamily,
+    },
+    warningText: {
+      color: themeColors.black,
+      fontSize: 18,
+      fontFamily: fontFamily,
+    },
+    warningContainer: {
+      alignItems: 'flex-start'
     },
     pressableView: {
       margin: 10,

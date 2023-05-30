@@ -32,7 +32,7 @@ export const storeModelMachine = model.createMachine(
   {
     predictableActionArguments: true,
     preserveActionOrder: true,
-    tsTypes: {} as import("./Store.typegen").Typegen0,
+    tsTypes: {} as import("./store.typegen").Typegen0,
     schema: {
       context: model.initialContext,
       events: {} as EventFrom<typeof model>
@@ -64,7 +64,6 @@ export const storeModelMachine = model.createMachine(
                 callback(model.events.STORE_RESPONSE(response))
               }
               catch (error: any) {
-                console.log("store error:", error)
                 callback(model.events.STORE_ERROR(error))
               }
             })

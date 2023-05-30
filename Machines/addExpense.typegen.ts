@@ -4,13 +4,14 @@
 export interface Typegen0 {
   '@@xstate/typegen': true;
   internalEvents: {
+    "error.platform.AddBudgetModel.checkingBudgetStatus:invocation[0]": { type: "error.platform.AddBudgetModel.checkingBudgetStatus:invocation[0]"; data: unknown };
     "xstate.init": { type: "xstate.init" };
   };
   invokeSrcNameMap: {
-
+    "checkIfBudgetLimitIsExceeded": "done.invoke.AddBudgetModel.checkingBudgetStatus:invocation[0]";
   };
   missingImplementations: {
-    actions: never;
+    actions: "resetStoreStatus";
     delays: never;
     guards: never;
     services: never;
@@ -19,8 +20,9 @@ export interface Typegen0 {
     "initializeTheBudgetKey": "STORE_RESPONSE";
     "loadAllBudgets": "xstate.init";
     "resetStoreStatus": "RESET_STORE_STATUS";
-    "resetTheFields": "ADD_EXPENSE";
+    "resetTheFields": "DISMISS";
     "setAllBudgets": "STORE_RESPONSE";
+    "setBudgetExceededInfo": "error.platform.AddBudgetModel.checkingBudgetStatus:invocation[0]";
     "setDate": "OK";
     "setExpenseAmount": "ADD_AMOUNT";
     "setExpenseDescription": "ADD_DESCRIPTION";
@@ -37,8 +39,8 @@ export interface Typegen0 {
 
   };
   eventsCausingServices: {
-
+    "checkIfBudgetLimitIsExceeded": "STORE_RESPONSE";
   };
-  matchesStates: "acceptingExpenseInput" | "handleDatePicker" | "loadingAllBudgets";
+  matchesStates: "acceptingExpenseInput" | "checkingBudgetStatus" | "handleDatePicker" | "loadingAllBudgets";
   tags: never;
 }
