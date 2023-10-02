@@ -20,6 +20,7 @@ import {AddNewBudget} from './screens/AddNewBudget';
 import {AddNewExpense} from './screens/AddNewExpense';
 import {ViewAllBudgets} from './screens/ViewAllBudgets';
 import {themeColors, fontFamily} from './Theme';
+import { Login } from './screens/Login';
 
 const Stack = createNativeStackNavigator();
 
@@ -47,6 +48,11 @@ function App(): JSX.Element {
               fontWeight: 'bold',
             },
           }}>
+          <Stack.Screen
+            name="Login"
+            component={Login}
+            options={{title: 'Login'}}
+          />
           <Stack.Screen
             name="Home"
             component={Home}
