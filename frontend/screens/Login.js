@@ -6,11 +6,15 @@ import { LabeledInputField } from '../components/LabeledInputField';
 import { useLoginScreen } from './LoginController';
 
 
-export const Login = () => {
+export const Login = ({navigation}) => {
   const controller = useLoginScreen();
 
   const addEmail = email => controller.ADD_EMAIL(email);
   const addPassword = password => controller.ADD_PASSWORD(password);
+
+  if(controller.loginStatus === 'success'){
+    navigation.navigate('Home')
+  }
 
   return (
       <LinearGradient
@@ -24,14 +28,14 @@ export const Login = () => {
             value={controller.email}
             onChange={addEmail}
             placeholder="Enter the Email"
-            keyboardType="email"
+            keyboardType="email-address"
           />
           <LabeledInputField
             label="Password"
             value={controller.password}
             onChange={addPassword}
             placeholder="Enter the Password"
-            keyboardType="password"
+            type="current-password"
           />
         </View>
         <Button title="Submit" onPress={controller.SUBMIT} />

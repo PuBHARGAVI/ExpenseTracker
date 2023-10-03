@@ -39,7 +39,7 @@ function App(): JSX.Element {
       />
       <NavigationContainer theme={isDarkMode ? DarkTheme : DefaultTheme}>
         <Stack.Navigator
-          initialRouteName="Home"
+          initialRouteName="Login"
           screenOptions={{
             headerTitleAlign: 'center',
             headerTitleStyle: {

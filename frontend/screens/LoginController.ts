@@ -1,5 +1,5 @@
 import { useInterpret, useSelector } from '@xstate/react';
-import { loginMachine, selectUserEmail, selectUserPassword, events } from '../machines/login';
+import { loginMachine, selectUserEmail, selectUserPassword, events, selectLoginStatus } from '../machines/login';
 
 export function useLoginScreen() {
     const service = useInterpret(loginMachine);
@@ -11,6 +11,7 @@ export function useLoginScreen() {
             service.send(events.SUBMIT())
         },
         email: useSelector(service, selectUserEmail),
-        password: useSelector(service, selectUserPassword)
+        password: useSelector(service, selectUserPassword),
+        loginStatus: useSelector(service, selectLoginStatus)
     };
 }
