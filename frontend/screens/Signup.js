@@ -1,28 +1,22 @@
 import React from 'react';
-import {Button, Pressable, Text, View} from 'react-native';
+import {Button, View} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import {theme} from '../Theme';
 import {LabeledInputField} from '../components/LabeledInputField';
 import {__AuthenticationToken} from '../utils/globalVariables';
-import {useLoginScreen} from './LoginController';
+import {useSingupScreen} from './SignupController';
 
-export const Login = ({navigation}) => {
-  const controller = useLoginScreen();
+export const Signup = props => {
+  const controller = useSingupScreen();
 
   const addEmail = email => controller.ADD_EMAIL(email);
   const addPassword = password => controller.ADD_PASSWORD(password);
 
-  const handleSubmit = () => {
-    controller.SUBMIT();
-  };
+  const handleSubmit = () => controller.SUBMIT();
 
-  const handleOnPress = () => {
-    navigation.navigate('Signup');
-  };
-
-  if (controller.loginStatus === 'success') {
+  if (controller.signupStatus === 'success') {
     __AuthenticationToken.setToken(controller.authToken);
-    navigation.navigate('Home');
+    props.navigation.navigate('Home');
   }
 
   return (
@@ -46,23 +40,6 @@ export const Login = ({navigation}) => {
           placeholder="Enter the Password"
           type="current-password"
         />
-        {controller.loginStatus !== 'success' && (
-          <Text style={{color: '#B00020', textAlign: 'center', margin: 10}}>
-            {controller.loginStatus}
-          </Text>
-        )}
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}>
-          <Text style={{fontWeight: 'bold'}}>{"Don't have an account?"}</Text>
-
-          <Pressable onPress={() => handleOnPress()}>
-            <Text style={{color: 'blue', marginLeft: 5}}>Create it now</Text>
-          </Pressable>
-        </View>
       </View>
       <Button title="Submit" onPress={handleSubmit} />
     </LinearGradient>

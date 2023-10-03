@@ -3,19 +3,19 @@
 export interface Typegen0 {
   '@@xstate/typegen': true;
   internalEvents: {
-    'done.invoke.loginModel.saveUserCredentials:invocation[0]': {
-      type: 'done.invoke.loginModel.saveUserCredentials:invocation[0]';
+    'done.invoke.signupModel.saveUserCredentials:invocation[0]': {
+      type: 'done.invoke.signupModel.saveUserCredentials:invocation[0]';
       data: unknown;
       __tip: 'See the XState TS docs to learn how to strongly type this.';
     };
-    'error.platform.loginModel.saveUserCredentials:invocation[0]': {
-      type: 'error.platform.loginModel.saveUserCredentials:invocation[0]';
+    'error.platform.signupModel.saveUserCredentials:invocation[0]': {
+      type: 'error.platform.signupModel.saveUserCredentials:invocation[0]';
       data: unknown;
     };
     'xstate.init': {type: 'xstate.init'};
   };
   invokeSrcNameMap: {
-    sendLoginRequest: 'done.invoke.loginModel.saveUserCredentials:invocation[0]';
+    sendSignupRequest: 'done.invoke.signupModel.saveUserCredentials:invocation[0]';
   };
   missingImplementations: {
     actions: never;
@@ -24,17 +24,17 @@ export interface Typegen0 {
     services: never;
   };
   eventsCausingActions: {
-    setAuthenticationToken: 'done.invoke.loginModel.saveUserCredentials:invocation[0]';
+    setAuthenticationToken: 'done.invoke.signupModel.saveUserCredentials:invocation[0]';
     setEmail: 'ADD_EMAIL';
-    setLoginStatus:
-      | 'done.invoke.loginModel.saveUserCredentials:invocation[0]'
-      | 'error.platform.loginModel.saveUserCredentials:invocation[0]';
     setPassword: 'ADD_PASSWORD';
+    setSignupStatus:
+      | 'done.invoke.signupModel.saveUserCredentials:invocation[0]'
+      | 'error.platform.signupModel.saveUserCredentials:invocation[0]';
   };
   eventsCausingDelays: {};
   eventsCausingGuards: {};
   eventsCausingServices: {
-    sendLoginRequest: 'SUBMIT';
+    sendSignupRequest: 'SUBMIT';
   };
   matchesStates: 'idle' | 'saveUserCredentials';
   tags: never;

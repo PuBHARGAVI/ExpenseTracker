@@ -1,26 +1,24 @@
 import {useInterpret, useSelector} from '@xstate/react';
 import {
   events,
-  loginMachine,
   selectAuthToken,
-  selectLoginStatus,
+  selectSignupStatus,
   selectUserEmail,
   selectUserPassword,
-} from '../machines/login';
+  signupMachine,
+} from '../machines/signup';
 
-export function useLoginScreen() {
-  const service = useInterpret(loginMachine);
+export function useSingupScreen() {
+  const service = useInterpret(signupMachine);
 
   return {
     ADD_EMAIL: (email: string) => service.send(events.ADD_EMAIL(email)),
     ADD_PASSWORD: (password: string) =>
       service.send(events.ADD_PASSWORD(password)),
-    SUBMIT: () => {
-      service.send(events.SUBMIT());
-    },
+    SUBMIT: () => service.send(events.SUBMIT()),
     email: useSelector(service, selectUserEmail),
     password: useSelector(service, selectUserPassword),
-    loginStatus: useSelector(service, selectLoginStatus),
+    signupStatus: useSelector(service, selectSignupStatus),
     authToken: useSelector(service, selectAuthToken),
   };
 }

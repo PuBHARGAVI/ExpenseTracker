@@ -6,7 +6,7 @@ const model = createModel(
   {
     email: "" as string,
     password: "" as string,
-    loginStatus: "" as string,
+    signupStatus: "" as string,
     authToken: "" as string
   },
   {
@@ -20,15 +20,15 @@ const model = createModel(
 
 export const events = model.events;
 
-export const loginMachine = model.createMachine({
+export const signupMachine = model.createMachine({
   predictableActionArguments: true,
   preserveActionOrder: true,
-  tsTypes: {} as import("./login.typegen").Typegen0,
+  tsTypes: {} as import("./signup.typegen").Typegen0,
   schema: {
     context: model.initialContext,
     events: {} as EventFrom<typeof model>
   },
-  id: 'loginModel',
+  id: 'signupModel',
   initial: 'idle',
   states: {
     idle: {
@@ -46,12 +46,12 @@ export const loginMachine = model.createMachine({
     },
     saveUserCredentials: {
       invoke: {
-        src: 'sendLoginRequest',
+        src: 'sendSignupRequest',
         onDone: {
-          actions: ['setLoginStatus', 'setAuthenticationToken']
+          actions: ['setSignupStatus','setAuthenticationToken']
         },
         onError: {
-          actions: 'setLoginStatus'
+          actions: 'setSignupStatus'
         }
       }
     }
@@ -64,17 +64,15 @@ export const loginMachine = model.createMachine({
     setPassword: model.assign({
       password: (_context, event) => event.password
     }),
-    setLoginStatus: model.assign({
-      loginStatus: (_context, event) => {
-        return event.data.status}
+    setSignupStatus: model.assign({
+      signupStatus: (_context, event) => event.data.status
     }),
     setAuthenticationToken: model.assign({
       authToken: (_context, event) => event.data.token
     })
-
   },
   services: {
-    sendLoginRequest: async (context) => {
+    sendSignupRequest: async (context) => {
       const requestOptions = {
         method: 'POST',
         headers: {
@@ -84,10 +82,10 @@ export const loginMachine = model.createMachine({
         body: JSON.stringify({ email: context.email, password: context.password }),
       };
       try {
-        const response = await fetch('http://10.0.2.2:3000/login', requestOptions);
-        const responseJson = await response.json();
-
-        return responseJson
+        const response = await fetch('http://10.0.2.2:3000/signup', requestOptions);
+        const data = await response.json();
+        
+        return JSON.parse(JSON.stringify(data))
       } catch (error) {
         console.error('Fetch error:', error);
         return error
@@ -97,7 +95,7 @@ export const loginMachine = model.createMachine({
 }
 )
 
-type State = StateFrom<typeof loginMachine>;
+type State = StateFrom<typeof signupMachine>;
 
 export function selectUserEmail(state: State) {
   return state.context.email;
@@ -107,8 +105,8 @@ export function selectUserPassword(state: State) {
   return state.context.password;
 }
 
-export function selectLoginStatus(state: State) {
-  return state.context.loginStatus;
+export function selectSignupStatus(state: State) {
+  return state.context.signupStatus;
 }
 
 export function selectAuthToken(state: State) {

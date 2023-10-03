@@ -21,6 +21,7 @@ import {AddNewExpense} from './screens/AddNewExpense';
 import {ViewAllBudgets} from './screens/ViewAllBudgets';
 import {themeColors, fontFamily} from './Theme';
 import { Login } from './screens/Login';
+import { Signup } from './screens/Signup';
 
 const Stack = createNativeStackNavigator();
 
@@ -52,6 +53,11 @@ function App(): JSX.Element {
             name="Login"
             component={Login}
             options={{title: 'Login'}}
+          />
+          <Stack.Screen
+            name="Signup"
+            component={Signup}
+            options={{title: 'Signup'}}
           />
           <Stack.Screen
             name="Home"
