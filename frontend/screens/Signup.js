@@ -1,5 +1,5 @@
 import React from 'react';
-import {Button, View} from 'react-native';
+import {Button, View, Text} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import {theme} from '../Theme';
 import {LabeledInputField} from '../components/LabeledInputField';
@@ -16,7 +16,10 @@ export const Signup = props => {
 
   if (controller.signupStatus === 'success') {
     __AuthenticationToken.setToken(controller.authToken);
-    props.navigation.navigate('Home');
+    props.navigation.reset({
+      index: 0,
+      routes: [{name: 'Home'}],
+    });
   }
 
   return (
@@ -41,6 +44,11 @@ export const Signup = props => {
           type="current-password"
         />
       </View>
+      {controller.signupStatus !== 'success' && (
+        <Text style={{color: '#B00020', textAlign: 'center'}}>
+          {controller.signupStatus}
+        </Text>
+      )}
       <Button title="Submit" onPress={handleSubmit} />
     </LinearGradient>
   );

@@ -24,6 +24,8 @@ export interface Typegen0 {
     services: never;
   };
   eventsCausingActions: {
+    resetAuthToken: 'SUBMIT';
+    resetLoginStatus: 'SUBMIT';
     setAuthenticationToken: 'done.invoke.loginModel.saveUserCredentials:invocation[0]';
     setEmail: 'ADD_EMAIL';
     setLoginStatus:

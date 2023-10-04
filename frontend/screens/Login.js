@@ -8,8 +8,9 @@ import {useLoginScreen} from './LoginController';
 
 export const Login = ({navigation}) => {
   const controller = useLoginScreen();
-
-  const addEmail = email => controller.ADD_EMAIL(email);
+  const addEmail = email => {
+    controller.ADD_EMAIL(email);
+  };
   const addPassword = password => controller.ADD_PASSWORD(password);
 
   const handleSubmit = () => {
@@ -22,7 +23,10 @@ export const Login = ({navigation}) => {
 
   if (controller.loginStatus === 'success') {
     __AuthenticationToken.setToken(controller.authToken);
-    navigation.navigate('Home');
+    navigation.reset({
+      index: 0,
+      routes: [{name: 'Home'}],
+    });
   }
 
   return (

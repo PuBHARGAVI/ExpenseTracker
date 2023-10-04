@@ -40,6 +40,7 @@ export const signupMachine = model.createMachine({
           actions: 'setPassword'
         },
         SUBMIT: {
+          actions: ['resetSignupStatus', 'resetAuthToken'],
           target: 'saveUserCredentials'
         }
       }
@@ -48,10 +49,12 @@ export const signupMachine = model.createMachine({
       invoke: {
         src: 'sendSignupRequest',
         onDone: {
-          actions: ['setSignupStatus','setAuthenticationToken']
+          actions: ['setSignupStatus','setAuthenticationToken'],
+          target: '#signupModel.idle'
         },
         onError: {
-          actions: 'setSignupStatus'
+          actions: 'setSignupStatus',
+          target: '#signupModel.idle'
         }
       }
     }
@@ -69,7 +72,14 @@ export const signupMachine = model.createMachine({
     }),
     setAuthenticationToken: model.assign({
       authToken: (_context, event) => event.data.token
-    })
+    }), 
+    resetSignupStatus: model.assign({
+      signupStatus: (_context, event) => ''
+    }),
+    resetAuthToken: model.assign({
+      authToken: (_context, event) => ''
+    }),
+
   },
   services: {
     sendSignupRequest: async (context) => {
@@ -83,9 +93,9 @@ export const signupMachine = model.createMachine({
       };
       try {
         const response = await fetch('http://10.0.2.2:3000/signup', requestOptions);
-        const data = await response.json();
+        const responseJson = await response.json();
         
-        return JSON.parse(JSON.stringify(data))
+        return responseJson;
       } catch (error) {
         console.error('Fetch error:', error);
         return error

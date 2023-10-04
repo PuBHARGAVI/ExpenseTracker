@@ -40,6 +40,7 @@ export const loginMachine = model.createMachine({
           actions: 'setPassword'
         },
         SUBMIT: {
+          actions: ['resetLoginStatus', 'resetAuthToken'],
           target: 'saveUserCredentials'
         }
       }
@@ -48,10 +49,12 @@ export const loginMachine = model.createMachine({
       invoke: {
         src: 'sendLoginRequest',
         onDone: {
-          actions: ['setLoginStatus', 'setAuthenticationToken']
+          actions: ['setLoginStatus', 'setAuthenticationToken'],
+          target: '#loginModel.idle'
         },
         onError: {
-          actions: 'setLoginStatus'
+          actions: 'setLoginStatus',
+          target: '#loginModel.idle'
         }
       }
     }
@@ -70,8 +73,13 @@ export const loginMachine = model.createMachine({
     }),
     setAuthenticationToken: model.assign({
       authToken: (_context, event) => event.data.token
-    })
-
+    }),
+    resetLoginStatus: model.assign({
+      loginStatus: (_context, event) => ''
+    }),
+    resetAuthToken: model.assign({
+      authToken: (_context, event) => ''
+    }),
   },
   services: {
     sendLoginRequest: async (context) => {
