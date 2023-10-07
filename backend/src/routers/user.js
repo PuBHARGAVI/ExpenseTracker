@@ -4,28 +4,33 @@ const router = express.Router();
 const User = require('../models/User');
 
 router.post('/signup', cors(), async (req, res) => {
-  const user = new User({
-    email: req.body.email,
-    password: req.body.password,
-  });
-  const token = await user.generateAuthenticationToken();
-  user.tokens = user.tokens.concat({token});
-
-  await user
-    .save()
-    .then(() => res.send({status: 'success', token: token}))
-    .catch(error => {
-      if (error.name === 'ValidationError') {
-        const validationErrors = Object.values(error.errors).map(err =>
-          err.message.replace('Path `', '').replace('`', '').replace('.', ''),
-        );
-        const formattedError = validationErrors.join(', ');
-
-        res.status(400).json({status: formattedError});
-      } else {
-        res.status(500).json({status: 'Internal server error'});
-      }
+  let isEmailAlreadyExists = await User.findByCredentials(req.body.email);
+  if (isEmailAlreadyExists) {
+    res.status(400).send({status: 'Email already exists'});
+  } else {
+    const user = new User({
+      email: req.body.email,
+      password: req.body.password,
     });
+    const token = await user.generateAuthenticationToken();
+    user.tokens = user.tokens.concat({token});
+
+    await user
+      .save()
+      .then(() => res.send({status: 'success', token: token}))
+      .catch(error => {
+        if (error.name === 'ValidationError') {
+          const validationErrors = Object.values(error.errors).map(err =>
+            err.message.replace('Path `', '').replace('`', '').replace('.', ''),
+          );
+          const formattedError = validationErrors.join(', ');
+
+          res.status(400).send({status: formattedError});
+        } else {
+          res.status(500).send({status: 'Internal server error'});
+        }
+      });
+  }
 });
 
 router.post('/login', cors(), async (req, res) => {
@@ -44,6 +49,6 @@ router.post('/login', cors(), async (req, res) => {
       .then(() => res.send({status: 'success', token: token}))
       .catch(e => res.send({status: e}));
   }
-})
+});
 
-module.exports = router
+module.exports = router;
