@@ -22,6 +22,8 @@ import {ViewAllBudgets} from './screens/ViewAllBudgets';
 import {themeColors, fontFamily} from './Theme';
 import { Login } from './screens/Login';
 import { Signup } from './screens/Signup';
+import { Expense } from './screens/Expense';
+import { ViewAllExpenses } from './screens/ViewAllExpenses';
 
 const Stack = createNativeStackNavigator();
 
@@ -75,15 +77,27 @@ function App(): JSX.Element {
             options={{title: 'Add New Budget'}}
           />
           <Stack.Screen
-            name="Expense"
-            component={AddNewExpense}
-            options={{title: 'Add a new Expense'}}
-          />
-          <Stack.Screen
             name="ViewAllBudgets"
             component={ViewAllBudgets}
             options={{
               title: 'View All Budgets',
+            }}
+          />
+          <Stack.Screen
+            name="Expenses"
+            component={Expense}
+            options={{title: 'Expenses'}}
+          />
+          <Stack.Screen
+            name="AddNewExpense"
+            component={AddNewExpense}
+            options={{title: 'Add New Expense'}}
+          />
+          <Stack.Screen
+            name="ViewAllExpenses"
+            component={ViewAllExpenses}
+            options={{
+              title: 'View All Expenses',
             }}
           />
         </Stack.Navigator>
