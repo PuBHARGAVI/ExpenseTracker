@@ -13,7 +13,10 @@ export const AddNewBudget = ({navigation}) => {
   const controller = useAddBudgetScreen();
 
   if (controller.requestStatus === 'please Authenticate yourself') {
-    navigation.navigate('Login');
+    navigation.reset({
+      index: 0,
+      routes: [{name: 'Login'}],
+    });
   } 
 
   const handleBudgetInput = amount => controller.ADD_AMOUNT(Number(amount));

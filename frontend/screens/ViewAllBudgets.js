@@ -15,7 +15,10 @@ export const ViewAllBudgets = ({navigation}) => {
   const controller = useViewAllBudgetsScreen();
 
   if (controller.requestStatus === 'please Authenticate yourself') {
-    navigation.navigate('Login');
+    navigation.reset({
+      index: 0,
+      routes: [{name: 'Login'}],
+    });
   } 
 
   const budgetList = controller.budgets;
