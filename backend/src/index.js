@@ -1,5 +1,6 @@
 const express = require('express')
 const cors = require('cors');
+const auth = require('./middleware/auth')
 require('./db/mongoose')
 const app = express()
 const port = 3000
@@ -13,6 +14,7 @@ app.use(cors({
 }))
 app.use(express.json())
 app.use(userRouter);
+app.use(auth);
 app.use(budgetRouter);
 
 app.listen(port,()=>{

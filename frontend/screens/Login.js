@@ -22,6 +22,7 @@ export const Login = ({navigation}) => {
   };
 
   if (controller.loginStatus === 'success') {
+    console.log("authtoken:",controller.authToken)
     __AuthenticationToken.setToken(controller.authToken);
     navigation.reset({
       index: 0,
@@ -50,23 +51,23 @@ export const Login = ({navigation}) => {
           placeholder="Enter the Password"
           type="current-password"
         />
-        {controller.loginStatus !== 'success' && (
-          <Text style={{color: '#B00020', textAlign: 'center', margin: 10}}>
-            {controller.loginStatus}
-          </Text>
-        )}
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}>
-          <Text style={{fontWeight: 'bold'}}>{"Don't have an account?"}</Text>
+      </View>
+      {controller.loginStatus !== 'success' && (
+        <Text style={{color: '#B00020', textAlign: 'center', margin: 10}}>
+          {controller.loginStatus}
+        </Text>
+      )}
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}>
+        <Text style={{fontWeight: 'bold'}}>{"Don't have an account?"}</Text>
 
-          <Pressable onPress={() => handleOnPress()}>
-            <Text style={{color: 'blue', marginLeft: 5}}>Create it now</Text>
-          </Pressable>
-        </View>
+        <Pressable onPress={() => handleOnPress()}>
+          <Text style={{color: 'blue', marginLeft: 5}}>Create it now</Text>
+        </Pressable>
       </View>
       <Button title="Submit" onPress={handleSubmit} />
     </LinearGradient>

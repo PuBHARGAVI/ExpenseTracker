@@ -12,8 +12,11 @@ import {formatDate} from '../utils/dateUtils';
 export const AddNewBudget = ({navigation}) => {
   const controller = useAddBudgetScreen();
 
-  const handleBudgetInput = amount => controller.ADD_AMOUNT(Number(amount));
+  if (controller.requestStatus === 'please Authenticate yourself') {
+    navigation.navigate('Login');
+  } 
 
+  const handleBudgetInput = amount => controller.ADD_AMOUNT(Number(amount));
   const handleDateChange = ({type}, selectedDate) => {
     if (type == 'set') {
       if (Platform.OS == 'android') {

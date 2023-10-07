@@ -84,7 +84,12 @@ export const loginMachine = model.createMachine({
   services: {
     sendLoginRequest: async (context) => {
       const body = JSON.stringify({ email: context.email, password: context.password });
-      const response = await apiRequest('POST', body, 'login');
+      const header = {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      };
+
+      const response = await apiRequest('POST', header, body, 'login');
       return response;
     }
   }

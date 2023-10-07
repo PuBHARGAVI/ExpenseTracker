@@ -3,6 +3,7 @@ import { createModel } from 'xstate/lib/model';
 import { storeEvents } from './store';
 import { storeModelMachine } from './store';
 import { apiRequest } from '../utils/requestApi';
+import { __AuthenticationToken } from '../utils/globalVariables';
 
 const model = createModel(
     {
@@ -56,7 +57,7 @@ export const addBudgetModelMachine = model.createMachine({
             }),
             on: {
                 ADD_AMOUNT: {
-                    actions: ['setBudgetAmount']
+                    actions: ['setBudgetAmount', 'resetRequestStatus']
                 },
                 ON_DATE_PICKER_PRESS: {
                     actions: ['setActiveDatePicker'],
@@ -154,21 +155,21 @@ export const addBudgetModelMachine = model.createMachine({
             startDate: () => new Date() as Date,
             endDate: () => new Date() as Date,
         }),
+
         setAddBudgetRequestStatus: model.assign({
             requestStatus: (_context, event) => event.data.status
         })
     },
     services: {
         sendAddBudgetRequest: async (context) => {
-            console.log("inside service")
             const body = JSON.stringify({amount: context.amount,startDate: context.startDate,endDate: context.endDate});
-            console.log("body:",body)
-            const response = await apiRequest('POST', body, 'addBudget');
-            console.log("resposne:",response)
-            // if(response.error){
-            //     console.log('###:',response.error.message)
-            //     throw new Error(response.error)
-            // }
+            const header = {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'Authorization': __AuthenticationToken.getToken()
+            };
+
+            const response = await apiRequest('POST', header, body, 'addBudget');            
             return response;
         }
     }
