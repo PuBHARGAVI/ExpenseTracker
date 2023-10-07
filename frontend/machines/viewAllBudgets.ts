@@ -3,10 +3,13 @@ import { EventFrom, StateFrom, spawn } from "xstate";
 import { storeEvents } from "./store";
 import { AppServices } from "./AddBudget";
 import { storeModelMachine } from "./store";
+import { __AuthenticationToken } from "../utils/globalVariables";
+import { apiRequest } from "../utils/requestApi";
 
 const model = createModel({
   budgets: {} as unknown,
-  serviceRefs: {} as AppServices
+  serviceRefs: {} as AppServices,
+  requestStatus: "" as string
 }, {
   events: {
     STORE_RESPONSE: (response: unknown) => ({ response })
@@ -26,21 +29,15 @@ export const viewAllBudgetsModel = model.createMachine({
   initial: 'loadingAllBudgets',
   states: {
     loadingAllBudgets: {
-      entry: [model.assign({
-        serviceRefs: (context) => {
-          const serviceRefs = {
-            ...context.serviceRefs,
-          };
-          serviceRefs.store = spawn(storeModelMachine);
-          return serviceRefs;
-        }
-      }), 'loadAllBudgets'],
-
-      on: {
-        STORE_RESPONSE: {
-          actions: ['setStoreResponse']
+      invoke: {
+        src: 'getAllBudgets',
+        onDone: {
+          actions: ['storeBudgetList'],
         },
-      }
+        onError: {
+          actions: ['setRequestStatus'],
+        }
+      },
     }
   }
 }, {
@@ -48,9 +45,28 @@ export const viewAllBudgetsModel = model.createMachine({
     loadAllBudgets: (context) => {
       context.serviceRefs.store.send(storeEvents.VIEW_ALL_BUDGETS())
     },
-    setStoreResponse: model.assign((context, event) => {
-      return { ...context, budgets: event.response };
+    
+    storeBudgetList: model.assign({
+      budgets: (_context, event) => {
+        console.log("budgets:",event.data.budgetList)
+        return event.data.budgetList
+      }
     }),
+
+    setRequestStatus: model.assign({
+      requestStatus: (_context, event) => event.data.status
+    })
+  },
+  services: {
+    getAllBudgets: async (context) => {
+      const header = {
+        'Accept': 'application/json',
+        'Authorization': __AuthenticationToken.getToken()
+      };
+
+      const response = await apiRequest('GET', header, '', 'getAllBudgets');
+      return response;
+    }
   }
 })
 
@@ -58,4 +74,8 @@ type State = StateFrom<typeof viewAllBudgetsModel>;
 
 export function selectBudgetsList(state: State) {
   return state.context.budgets;
+}
+
+export function selectRequestStatus(state: State) {
+  return state.context.requestStatus;
 }

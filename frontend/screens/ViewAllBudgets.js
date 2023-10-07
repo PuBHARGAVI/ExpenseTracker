@@ -13,6 +13,11 @@ import {formatDate} from '../utils/dateUtils';
 
 export const ViewAllBudgets = ({navigation}) => {
   const controller = useViewAllBudgetsScreen();
+
+  if (controller.requestStatus === 'please Authenticate yourself') {
+    navigation.navigate('Login');
+  } 
+
   const budgetList = controller.budgets;
 
   const handleBackButton = () => {

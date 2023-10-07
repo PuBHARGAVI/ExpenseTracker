@@ -2,6 +2,7 @@ import {useInterpret, useSelector} from '@xstate/react';
 import {
   selectBudgetsList,
   viewAllBudgetsModel,
+  selectRequestStatus,
 } from '../machines/viewAllBudgets';
 
 export function useViewAllBudgetsScreen() {
@@ -9,5 +10,6 @@ export function useViewAllBudgetsScreen() {
 
   return {
     budgets: useSelector(service, selectBudgetsList),
+    requestStatus: useSelector(service, selectRequestStatus)
   };
 }

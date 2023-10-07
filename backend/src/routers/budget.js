@@ -3,6 +3,7 @@ const cors = require('cors');
 const auth = require('../middleware/auth');
 const router = express.Router();
 const Budget = require('../models/Budget');
+const User = require('../models/User');
 
 router.post('/addBudget', cors(), auth, async (req, res) => {
   const budget = new Budget({
@@ -29,5 +30,21 @@ router.post('/addBudget', cors(), auth, async (req, res) => {
       }
     });
 });
+
+router.get('/getAllBudgets', cors(), auth, async (req, res) => {
+  const user = req.user;
+  
+  let budgetList = await Budget.find({user: user._id}).populate('user').exec()
+  budgetList = budgetList.map(budget => {
+    return JSON.stringify({
+      id: budget._id,
+      amount: budget.amount,
+      startDate: budget.startDate,
+      endDate: budget.endDate
+    })
+  })
+
+  res.status(200).send({budgetList: budgetList})
+})
 
 module.exports = router;
