@@ -2,6 +2,7 @@ import { EventFrom, StateFrom, ActorRefFrom, spawn } from 'xstate';
 import { createModel } from 'xstate/lib/model';
 import { storeEvents } from './store';
 import { storeModelMachine } from './store';
+import { apiRequest } from '../utils/requestApi';
 
 const model = createModel(
     {
@@ -12,7 +13,8 @@ const model = createModel(
         showEndDatePicker: false as boolean,
         activeDatePicker: "" as string,
         storeStatus: "" as string,
-        serviceRefs: {} as AppServices
+        serviceRefs: {} as AppServices,
+        requestStatus: "" as string
     },
     {
         events: {
@@ -23,7 +25,8 @@ const model = createModel(
             CANCEL: () => ({}),
             STORE_RESPONSE: (response: string) => ({ response }),
             STORE_ERROR: (error: Error) => ({ error }),
-            RESET_STORE_STATUS: () => ({})
+            RESET_STORE_STATUS: () => ({}),
+            RESET_REQUEST_STATUS: () => ({})
         }
     }
 )
@@ -60,7 +63,7 @@ export const addBudgetModelMachine = model.createMachine({
                     target: 'handleDatePicker'
                 },
                 ADD_BUDGET: {
-                    actions: ['storeTheBudget', 'resetTheFields']
+                    target: 'saveTheBudget',
                 },
                 STORE_RESPONSE: {
                     actions: ['setStoreResponse']
@@ -70,6 +73,9 @@ export const addBudgetModelMachine = model.createMachine({
                 },
                 RESET_STORE_STATUS: {
                     actions: ['resetStoreStatus']
+                },
+                RESET_REQUEST_STATUS: {
+                    actions: ['resetRequestStatus']
                 }
             }
         },
@@ -85,6 +91,19 @@ export const addBudgetModelMachine = model.createMachine({
                     target: 'acceptingBudgetInput'
                 }
             }
+        },
+        saveTheBudget: {
+            invoke: {
+                src: 'sendAddBudgetRequest',
+                onDone: {
+                    actions: ['setAddBudgetRequestStatus','resetTheFields'],
+                    target: 'acceptingBudgetInput'
+                },
+                onError: {
+                    actions: ['setAddBudgetRequestStatus','resetTheFields'],
+                    target: 'acceptingBudgetInput'
+                }
+            },
         }
     }
 }, {
@@ -125,11 +144,33 @@ export const addBudgetModelMachine = model.createMachine({
         resetStoreStatus: model.assign({
             storeStatus: () => ""
         }),
+
+        resetRequestStatus: model.assign({
+            requestStatus: () => ""
+        }),
+
         resetTheFields: model.assign({
             amount: () => 0,
             startDate: () => new Date() as Date,
             endDate: () => new Date() as Date,
         }),
+        setAddBudgetRequestStatus: model.assign({
+            requestStatus: (_context, event) => event.data.status
+        })
+    },
+    services: {
+        sendAddBudgetRequest: async (context) => {
+            console.log("inside service")
+            const body = JSON.stringify({amount: context.amount,startDate: context.startDate,endDate: context.endDate});
+            console.log("body:",body)
+            const response = await apiRequest('POST', body, 'addBudget');
+            console.log("resposne:",response)
+            // if(response.error){
+            //     console.log('###:',response.error.message)
+            //     throw new Error(response.error)
+            // }
+            return response;
+        }
     }
 })
 
@@ -157,6 +198,10 @@ export function selectEndDate(state: State) {
 
 export function selectStoreStatus(state: State) {
     return state.context.storeStatus;
+}
+
+export function selectRequestStatus(state: State) {
+    return state.context.requestStatus;
 }
 
 export interface AppServices {

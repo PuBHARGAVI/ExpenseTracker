@@ -8,6 +8,7 @@ import {
   selectStartDate,
   selectEndDate,
   selectStoreStatus,
+  selectRequestStatus,
 } from '../machines/AddBudget';
 
 export function useAddBudgetScreen() {
@@ -21,11 +22,13 @@ export function useAddBudgetScreen() {
     ON_DATE_PICKER_PRESS: pickerType =>
       service.send(events.ON_DATE_PICKER_PRESS(pickerType)),
     RESET_STORE_STATUS: () => service.send(events.RESET_STORE_STATUS()),
+    RESET_REQUEST_STATUS: () => service.send(events.RESET_REQUEST_STATUS()),
     showStartDatePicker: useSelector(service, selectStartDatePickerVisibility),
     showEndDatePicker: useSelector(service, selectEndDatePickerVisibility),
     startDate: useSelector(service, selectStartDate),
     endDate: useSelector(service, selectEndDate),
     budgetAmount: useSelector(service, selectBudgetAmount),
     storeStatus: useSelector(service, selectStoreStatus),
+    requestStatus: useSelector(service, selectRequestStatus),
   };
 }

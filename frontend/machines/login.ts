@@ -1,7 +1,7 @@
 
 import { EventFrom, StateFrom } from 'xstate';
 import { createModel } from 'xstate/lib/model';
-
+import { apiRequest } from '../utils/requestApi';
 const model = createModel(
   {
     email: "" as string,
@@ -83,23 +83,9 @@ export const loginMachine = model.createMachine({
   },
   services: {
     sendLoginRequest: async (context) => {
-      const requestOptions = {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        },
-        body: JSON.stringify({ email: context.email, password: context.password }),
-      };
-      try {
-        const response = await fetch('http://10.0.2.2:3000/login', requestOptions);
-        const responseJson = await response.json();
-
-        return responseJson
-      } catch (error) {
-        console.error('Fetch error:', error);
-        return error
-      }
+      const body = JSON.stringify({ email: context.email, password: context.password });
+      const response = await apiRequest('POST', body, 'login');
+      return response;
     }
   }
 }

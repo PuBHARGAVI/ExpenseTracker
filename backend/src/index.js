@@ -4,6 +4,7 @@ require('./db/mongoose')
 const app = express()
 const port = 3000
 const userRouter = require('./routers/user')
+const budgetRouter = require('./routers/budget')
 
 app.use(cors({
   "origin": "*",
@@ -11,7 +12,8 @@ app.use(cors({
   "preflightContinue": false,
 }))
 app.use(express.json())
-app.use(userRouter)
+app.use(userRouter);
+app.use(budgetRouter);
 
 app.listen(port,()=>{
   console.log("listening to the server")

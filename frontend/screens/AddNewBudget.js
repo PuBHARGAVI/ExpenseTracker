@@ -1,5 +1,5 @@
 import React from 'react';
-import {Button, Platform, View} from 'react-native';
+import {Button, Platform, View, Text} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import {theme, themeColors} from '../Theme';
@@ -31,10 +31,10 @@ export const AddNewBudget = ({navigation}) => {
       end={{x: 1, y: 1}}
       style={theme.styles.linearGradient}>
       <MessageOverlay
-        isVisible={controller.storeStatus != ''}
-        message={controller.storeStatus}
+        isVisible={controller.requestStatus === 'success'}
+        message={'Budget is successfully saved'}
         onDismiss={() => {
-          return controller.RESET_STORE_STATUS;
+          return controller.RESET_REQUEST_STATUS;
         }}
       />
       <View>
@@ -88,6 +88,11 @@ export const AddNewBudget = ({navigation}) => {
           />
         )}
       </View>
+      {controller.requestStatus !== 'success' && (
+        <Text style={{color: '#B00020', textAlign: 'center', margin: 10}}>
+          {controller.requestStatus}
+        </Text>
+      )}
       <Button title="Add the budget" onPress={controller.ADD_BUDGET} />
     </LinearGradient>
   );
