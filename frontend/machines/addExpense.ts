@@ -5,6 +5,8 @@ import { storeModelMachine } from "./store";
 import { storeEvents } from "./store";
 import { getPickerValue } from "../screens/AddNewExpense";
 import { isBudgetLimitedExceed } from "../utils/expenseUtils";
+import { __AuthenticationToken } from "../utils/globalVariables";
+import { apiRequest } from "../utils/requestApi";
 
 const model = createModel(
   {
@@ -18,6 +20,8 @@ const model = createModel(
     budgets: {} as unknown,
     budgetExceededInfo: "" as string,
     storeResponse: "" as string,
+    requestStatus: "" as string
+
   },
   {
     events: {
@@ -51,21 +55,17 @@ export const addExpenseModelMachine = model.createMachine({
   initial: 'loadingAllBudgets',
   states: {
     loadingAllBudgets: {
-      entry: [model.assign({
-        serviceRefs: (context) => {
-          const serviceRefs = {
-            ...context.serviceRefs,
-          };
-          serviceRefs.store = spawn(storeModelMachine);
-          return serviceRefs;
-        }
-      }), 'loadAllBudgets'],
-      on: {
-        STORE_RESPONSE: {
-          actions: ['setAllBudgets', 'initializeTheBudgetKey'],
+      invoke: {
+        src: 'getAllBudgets',
+        onDone: {
+          actions: ['storeBudgetList','initializeTheBudgetKey'],
           target: 'acceptingExpenseInput'
         },
-      }
+        onError: {
+          actions: ['setRequestStatus'],
+          target: 'acceptingExpenseInput'
+        }
+      },
     },
     acceptingExpenseInput: {
       on: {
@@ -79,7 +79,7 @@ export const addExpenseModelMachine = model.createMachine({
           target: 'handleDatePicker'
         },
         ADD_EXPENSE: {
-          actions: ['storeTheExpense'],
+          target: 'saveTheExpense',
         },
         RESET_STORE_STATUS: {
           actions: ['resetStoreStatus']
@@ -93,8 +93,24 @@ export const addExpenseModelMachine = model.createMachine({
         },
         STORE_ERROR: {
           actions: ['setStoreError']
+        },
+        DISMISS: {
+          actions: 'resetRequestStatus'
         }
       }
+    },
+    saveTheExpense: {
+      invoke: {
+        src: 'sendAddExpenseRequest',
+        onDone: {
+          actions: ['setAddExpenseRequestStatus', 'resetTheFields'],
+          target: 'acceptingExpenseInput'
+        },
+        onError: {
+          actions: ['setAddExpenseRequestStatus', 'resetTheFields'],
+          target: 'acceptingExpenseInput'
+        }
+      },
     },
     checkingBudgetStatus: {
       invoke: {
@@ -128,6 +144,19 @@ export const addExpenseModelMachine = model.createMachine({
   }
 }, {
   actions: {
+    storeBudgetList: model.assign({
+      budgets: (_context, event) => {
+        return event.data.budgetList
+      }
+    }),
+    setAddExpenseRequestStatus: model.assign({
+      requestStatus: (_context, event) => event.data.status
+    }),
+
+    resetRequestStatus: model.assign({
+      requestStatus: (_context) => ''
+    }),
+
     loadAllBudgets: (context) => {
       context.serviceRefs.store.send(storeEvents.VIEW_ALL_BUDGETS())
     },
@@ -137,8 +166,7 @@ export const addExpenseModelMachine = model.createMachine({
     initializeTheBudgetKey: model.assign((context, _event) => {
       const [firstBudget] = Object.values(context.budgets as object);
       const budget = JSON.parse(firstBudget);
-      const key = getPickerValue(budget)
-
+      const key = budget.id
       return { ...context, budgetKey: key };
     }),
     setStoreResponse: model.assign((context, event) => {
@@ -194,6 +222,26 @@ export const addExpenseModelMachine = model.createMachine({
     checkIfBudgetLimitIsExceeded: async (context) => {
       const response = await isBudgetLimitedExceed(context.budgetKey);
 
+      return response;
+    },
+    getAllBudgets: async (context) => {
+      const header = {
+        'Accept': 'application/json',
+        'Authorization': __AuthenticationToken.getToken()
+      };
+
+      const response = await apiRequest('GET', header, '', 'getAllBudgets');
+      return response;
+    },
+    sendAddExpenseRequest: async (context) => {
+      const body = JSON.stringify({ amount: context.amount, description: context.description, date: context.date, budgetId: context.budgetKey });
+      const header = {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': __AuthenticationToken.getToken()
+      };
+
+      const response = await apiRequest('POST', header, body, 'addExpense');
       return response;
     }
   }

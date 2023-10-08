@@ -1,11 +1,15 @@
+const mongoose = require('mongoose')
 const express = require('express');
 const cors = require('cors');
 const auth = require('../middleware/auth');
-const router = express.Router();
+const Budget = require('../models/Budget');
 const Expense = require('../models/Expense');
+const router = express.Router();
 
 router.post('/addExpense', cors(), auth, async (req, res) => {
-    const budget = await Budget.findById({ _id: req.body.budgetId });
+    try {
+    const budget = await Budget.findById(new mongoose.Types.ObjectId(req.body.budgetId));
+    
     const expense = new Expense({
         amount: req.body.amount,
         description: req.body.description,
@@ -13,24 +17,26 @@ router.post('/addExpense', cors(), auth, async (req, res) => {
         user: req.user,
         budget: budget,
     });
-
     await expense
-        .save()
-        .then(() => {
-            res.send({ status: 'success' });
-        })
-        .catch(error => {
-            if (error.name === 'ValidationError') {
-                const validationErrors = Object.values(error.errors).map(err =>
-                    err.message.replace('Path `', '').replace('`', '').replace('.', ''),
-                );
-                const formattedError = validationErrors.join(', ');
+      .save()
+      .then(() => {
+        res.send({status: 'success'});
+      })
+      .catch(error => {
+        if (error.name === 'ValidationError') {
+          const validationErrors = Object.values(error.errors).map(err =>
+            err.message.replace('Path `', '').replace('`', '').replace('.', ''),
+          );
+          const formattedError = validationErrors.join(', ');
 
-                res.status(400).send({ status: formattedError });
-            } else {
-                res.status(500).send({ status: 'Internal server error' });
-            }
-        });
+          res.status(400).send({status: formattedError});
+        } else {
+          res.status(500).send({status: 'Internal server error'});
+        }
+      });
+    }catch(error) {
+        res.status(400).send({status: error})
+    }
 });
 
 router.get('/getAllExpenses', cors(), auth, async (req, res) => {

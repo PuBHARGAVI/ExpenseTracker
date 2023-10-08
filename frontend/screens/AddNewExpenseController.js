@@ -11,8 +11,9 @@ import {
   selectBudgetKey,
   selectBudgetExceededInfo,
 } from '../machines/addExpense';
+import { selectRequestStatus } from '../machines/AddBudget';
 
-export function useAddBudgetScreen() {
+export function useAddExpenseScreen() {
   const service = useInterpret(addExpenseModelMachine);
 
   return {
@@ -35,5 +36,6 @@ export function useAddBudgetScreen() {
     budgets: useSelector(service, selectBudgetList),
     budgetKey: useSelector(service, selectBudgetKey),
     budgetExceededInfo: useSelector(service, selectBudgetExceededInfo),
+    requestStatus: useSelector(service, selectRequestStatus)
   };
 }

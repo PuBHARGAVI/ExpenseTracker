@@ -3,7 +3,7 @@ import {Button, Text, View} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import {LabeledInputField} from '../components/LabeledInputField';
 import {PressableLabeledInputField} from '../components/PressableLabeledInputField';
-import {useAddBudgetScreen} from './AddNewExpenseController';
+import {useAddExpenseScreen} from './AddNewExpenseController';
 import {theme, themeColors} from '../Theme';
 import {formatDate} from '../utils/dateUtils';
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -18,9 +18,16 @@ export const getPickerValue = budget => {
   return pickerValue;
 };
 
-export const AddNewExpense = () => {
+export const AddNewExpense = ({navigation}) => {
   let parsedData;
-  const controller = useAddBudgetScreen();
+  const controller = useAddExpenseScreen();
+
+  if (controller.requestStatus === 'please Authenticate yourself') {
+    navigation.reset({
+      index: 0,
+      routes: [{name: 'Login'}],
+    });
+  }
 
   if (controller.budgets.length > 0) {
     console.log('array:', controller.budgets);
@@ -46,6 +53,7 @@ export const AddNewExpense = () => {
   };
 
   const handleBudgetChange = budget => {
+    console.log("budget selecetion:",budget)
     controller.ON_BUDGET_SELECTION(budget);
   };
   return (
@@ -55,8 +63,8 @@ export const AddNewExpense = () => {
       end={{x: 1, y: 1}}
       style={theme.addNewExpenseStyles.linearGradientContainer}>
       <MessageOverlay
-        isVisible={controller.storeStatus != ''}
-        message={controller.storeStatus}
+        isVisible={controller.requestStatus === 'success'}
+        message={'Expense is successfully saved'}
         onDismiss={() => {
           return controller.DISMISS;
         }}
@@ -114,7 +122,7 @@ export const AddNewExpense = () => {
                       <Picker.Item
                         key={pickerValue}
                         label={pickerValue}
-                        value={pickerValue}
+                        value={budget.id}
                       />
                     );
                   })}
@@ -123,6 +131,11 @@ export const AddNewExpense = () => {
           </View>
         )}
       </View>
+      {controller.requestStatus !== 'success' && (
+        <Text style={{color: '#B00020', textAlign: 'center', margin: 10}}>
+          {controller.requestStatus}
+        </Text>
+      )}
       <Button title="Add the Expense" onPress={controller.ADD_EXPENSE} />
     </LinearGradient>
   );
