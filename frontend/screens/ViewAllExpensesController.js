@@ -14,6 +14,7 @@ export function useViewAllExpensesScreen(props) {
       service.send(events.GET_EXPENSES_OF_BUDGET(budgetId)),
     GET_ALL_EXPENSES: () =>
       service.send(events.GET_ALL_EXPENSES()),
+    DELETE_EXPENSE: (expenseId) => service.send(events.DELETE_EXPENSE(expenseId)),  
     expenses: useSelector(service, selectExpensesList),
     requestStatus: useSelector(service, selectRequestStatus),
   };

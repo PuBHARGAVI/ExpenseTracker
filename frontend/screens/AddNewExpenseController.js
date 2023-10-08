@@ -21,6 +21,7 @@ export function useAddExpenseScreen() {
     ADD_DESCRIPTION: description =>
       service.send(events.ADD_DESCRIPTION(description)),
     ADD_EXPENSE: () => service.send(events.ADD_EXPENSE()),
+    DELETE_EXPENSE: () => service.send(events.DELETE_EXPENSE()),
     ON_DATE_PICKER_PRESS: () => service.send(events.ON_DATE_PICKER_PRESS()),
     OK: date => service.send(events.OK(date)),
     CANCEL: () => service.send(events.CANCEL()),

@@ -85,4 +85,18 @@ router.get('/getBudgetExpenses', cors(), auth, async (req, res) => {
   }
 });
 
+router.delete('/deleteExpense', cors(), auth, async (req, res) => {
+  try{
+    await Expense.findOneAndRemove({_id: req.query.expenseId})
+      .then(() => {
+        res.status(200).send({status: 'success'});
+      })
+      .catch(error => {
+        res.status(400).send({status: error});
+      });
+  }catch(error){
+    res.status(500).send({status: error});
+  }
+})
+
 module.exports = router;

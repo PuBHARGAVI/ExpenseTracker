@@ -138,6 +138,9 @@ export const theme = {
       fontSize: 15,
       fontFamily: fontFamily
     },
+    deleteIcon: {
+      flex: 0.1,
+    },
   }),
   addNewExpenseStyles: StyleSheet.create({
     linearGradientContainer: {

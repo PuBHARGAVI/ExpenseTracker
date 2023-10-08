@@ -5,11 +5,13 @@ import {
   TouchableOpacity,
   View,
   BackHandler,
+  Pressable,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import {theme} from '../Theme';
 import {formatDate} from '../utils/dateUtils';
 import { useViewAllExpensesScreen } from './ViewAllExpensesController';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 export const ViewAllExpenses = (props) => {
   const controller = useViewAllExpensesScreen();
@@ -48,8 +50,11 @@ export const ViewAllExpenses = (props) => {
     };
   }, []);
 
+  const handleExpenseDelete = (id) => {
+    controller.DELETE_EXPENSE(id)
+  }
   const renderItem = ({item}) => {
-    const {amount, description, date} = JSON.parse(item);
+    const {id, amount, description, date} = JSON.parse(item);
     formattedDate = formatDate(new Date(date));
     return (
       <TouchableOpacity
@@ -62,6 +67,15 @@ export const ViewAllExpenses = (props) => {
         <Text style={theme.viewAllBudgetStyles.touchableText}>
           {description}
         </Text>
+        <Pressable
+          onPress={() => handleExpenseDelete(id)}
+          style={theme.viewAllBudgetStyles.deleteIcon}>
+          <Icon
+            name="trash"
+            color="red"
+            size={18}
+          />
+        </Pressable>
       </TouchableOpacity>
     );
   };
@@ -76,6 +90,7 @@ export const ViewAllExpenses = (props) => {
         <Text style={theme.viewAllBudgetStyles.headerText}>Amount</Text>
         <Text style={theme.viewAllBudgetStyles.headerText}>Date</Text>
         <Text style={theme.viewAllBudgetStyles.headerText}>Description</Text>
+        <Text style={theme.viewAllBudgetStyles.deleteIcon}></Text>
       </View>
       <FlatList
         style={{width: '100%'}}

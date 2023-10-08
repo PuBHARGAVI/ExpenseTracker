@@ -35,7 +35,8 @@ const model = createModel(
       ON_BUDGET_SELECTION: (budgetKey: string) => ({ budgetKey }),
       STORE_RESPONSE: (response: any) => ({ response }),
       STORE_ERROR: (error: Error) => ({ error }),
-      DISMISS: () => ({})
+      DISMISS: () => ({}),
+      DELETE_EXPENSE: () => ({}),
     }
   }
 )
@@ -81,6 +82,9 @@ export const addExpenseModelMachine = model.createMachine({
         ADD_EXPENSE: {
           target: 'saveTheExpense',
         },
+        DELETE_EXPENSE: {
+          target: 'deleteTheExpense',
+        },
         RESET_STORE_STATUS: {
           actions: ['resetStoreStatus']
         },
@@ -103,11 +107,24 @@ export const addExpenseModelMachine = model.createMachine({
       invoke: {
         src: 'sendAddExpenseRequest',
         onDone: {
-          actions: ['setAddExpenseRequestStatus', 'resetTheFields'],
+          actions: ['setRequestStatus', 'resetTheFields'],
           target: 'acceptingExpenseInput'
         },
         onError: {
-          actions: ['setAddExpenseRequestStatus', 'resetTheFields'],
+          actions: ['setRequestStatus', 'resetTheFields'],
+          target: 'acceptingExpenseInput'
+        }
+      },
+    },
+    deleteTheExpense: {
+      invoke: {
+        src: 'sendDeleteExpenseRequest',
+        onDone: {
+          actions: ['setRequestStatus'],
+          target: 'acceptingExpenseInput'
+        },
+        onError: {
+          actions: ['setRequestStatus'],
           target: 'acceptingExpenseInput'
         }
       },
@@ -246,6 +263,17 @@ export const addExpenseModelMachine = model.createMachine({
       };
 
       const response = await apiRequest('POST', header, body, 'addExpense');
+      return response;
+    },
+    sendDeleteExpenseRequest: async (context) => {
+      const body = JSON.stringify({ amount: context.amount, description: context.description, date: context.date, budgetId: context.budgetKey });
+      const header = {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': __AuthenticationToken.getToken()
+      };
+
+      const response = await apiRequest('DELETE', header, body, 'deleteExpense');
       return response;
     }
   }
