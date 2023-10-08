@@ -28,6 +28,10 @@ export const ViewAllBudgets = ({navigation}) => {
     return true;
   };
 
+  const handleBudgetPress = (id) => {
+    navigation.navigate('ViewAllExpenses',{budgetId: id});
+  }
+
   useEffect(() => {
     const backHandler = BackHandler.addEventListener(
       'hardwareBackPress',
@@ -40,11 +44,11 @@ export const ViewAllBudgets = ({navigation}) => {
   }, []);
 
   const renderItem = ({item}) => {
-    const {amount, startDate, endDate} = JSON.parse(item);
+    const {id, amount, startDate, endDate} = JSON.parse(item);
     formattedStartDate = formatDate(new Date(startDate));
     formattedEndDate = formatDate(new Date(endDate));
     return (
-      <TouchableOpacity
+      <TouchableOpacity onPress={()=>handleBudgetPress(id)}
         activeOpacity={0.7}
         style={theme.viewAllBudgetStyles.touchableContainer}>
         <Text style={theme.viewAllBudgetStyles.touchableText}>{amount}</Text>

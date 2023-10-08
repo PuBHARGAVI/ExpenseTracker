@@ -59,7 +59,7 @@ router.get('/getAllExpenses', cors(), auth, async (req, res) => {
 
 router.get('/getBudgetExpenses', cors(), auth, async (req, res) => {
     const user = req.user;
-    const budget = await Budget.findById({ _id: req.body.budgetId });
+    const budget = await Budget.findById({ _id: req.query.budgetId });
 
     let expenseList = await Expense.find({ user: user._id, budget: budget._id })
         .populate(['user','budget'])

@@ -11,11 +11,20 @@ import {theme} from '../Theme';
 import {formatDate} from '../utils/dateUtils';
 import { useViewAllExpensesScreen } from './ViewAllExpensesController';
 
-export const ViewAllExpenses = ({navigation}) => {
+export const ViewAllExpenses = (props) => {
   const controller = useViewAllExpensesScreen();
+  const budgetId = props.route.params?.budgetId;
+  
+  useEffect(()=>{
+    if (budgetId) {
+      controller.GET_EXPENSES_OF_BUDGET(budgetId);
+    } else {
+      controller.GET_ALL_EXPENSES();
+    }
+  },[budgetId])
 
   if (controller.requestStatus === 'please Authenticate yourself') {
-    navigation.reset({
+    props.navigation.reset({
       index: 0,
       routes: [{name: 'Login'}],
     });
@@ -24,7 +33,7 @@ export const ViewAllExpenses = ({navigation}) => {
   const budgetList = controller.expenses;
 
   const handleBackButton = () => {
-    navigation.navigate('Expenses');
+    props.navigation.navigate('Expenses');
     return true;
   };
 

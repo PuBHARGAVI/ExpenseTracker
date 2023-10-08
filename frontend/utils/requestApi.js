@@ -1,23 +1,32 @@
-export const apiRequest = async (method, header = {}, body, endpoint) =>{
+export const apiRequest = async (
+  method,
+  header = {},
+  body,
+  endpoint,
+  queryParams,
+) => {
   const requestOptions = {
     method: method,
-    headers: header
-  }
+    headers: header,
+  };
 
-  if(method === 'POST') {
-    requestOptions.body = body
+  if (method === 'POST') {
+    requestOptions.body = body;
   }
 
   try {
-    const url = `http://10.0.2.2:3000/${endpoint}`;
+    let url = `http://10.0.2.2:3000/${endpoint}`;
+
+    if (queryParams) {
+      url = url + '?' + queryParams;
+    }
     const response = await fetch(url, requestOptions);
     const responseJson = await response.json();
-    
-    if (responseJson.status === 'please Authenticate yourself'){
+    if (responseJson.status === 'please Authenticate yourself') {
       throw new Error('please Authenticate yourself');
     }
-      return responseJson;
+    return responseJson;
   } catch (error) {
-      throw {status: error.message}
-    }
-  };
+    throw {status: error.message};
+  }
+};

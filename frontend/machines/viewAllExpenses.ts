@@ -7,10 +7,13 @@ import { AppServices } from "./AddBudget";
 const model = createModel({
   expenses: {} as unknown,
   serviceRefs: {} as AppServices,
-  requestStatus: "" as string
+  requestStatus: "" as string,
+  budgetId: "" as string
 }, {
   events: {
-    STORE_RESPONSE: (response: unknown) => ({ response })
+    STORE_RESPONSE: (response: unknown) => ({ response }),
+    GET_EXPENSES_OF_BUDGET: (budgetId: string) => ({budgetId}),
+    GET_ALL_EXPENSES: () => ({})
   }
 })
 
@@ -24,25 +27,55 @@ export const viewAllExpensesModel = model.createMachine({
     events: {} as EventFrom<typeof model>,
   },
   id: 'ViewAllExpensesModel',
-  initial: 'loadingAllExpenses',
+  initial: 'idle',
   states: {
     loadingAllExpenses: {
       invoke: {
         src: 'getAllExpenses',
         onDone: {
           actions: ['storeExpenseList'],
+          target: 'idle'
         },
         onError: {
           actions: ['setRequestStatus'],
+          target: 'idle'
+        }
+      },
+    },
+    idle: {
+      on: {
+        GET_ALL_EXPENSES: {
+          target: 'loadingAllExpenses'
+        },
+        GET_EXPENSES_OF_BUDGET: {
+          actions: 'setBudgetId',
+          target: 'loadAllExpensesOfBudget'
+        }
+      }
+    },
+    loadAllExpensesOfBudget: {
+      invoke: {
+        src: 'getAllExpensesOfBudget',
+        onDone: {
+          actions: ['storeExpenseList'],
+          target: 'idle'
+        },
+        onError: {
+          actions: ['setRequestStatus'],
+          target: 'idle'
         }
       },
     }
   }
 }, {
   actions: {
+    setBudgetId: model.assign({
+      budgetId: (_context,event) => {
+        return event.budgetId}
+    }),
+
     storeExpenseList: model.assign({
       expenses: (_context, event) => {
-        console.log("budgets:", event.data.expenseList)
         return event.data.expenseList
       }
     }),
@@ -59,6 +92,16 @@ export const viewAllExpensesModel = model.createMachine({
       };
 
       const response = await apiRequest('GET', header, '', 'getAllExpenses');
+      return response;
+    },
+    getAllExpensesOfBudget: async (context) => {
+      const header = {
+        'Accept': 'application/json',
+        'Authorization': __AuthenticationToken.getToken()
+      };
+      const queryParams = `budgetId=${ context.budgetId }`
+      
+      const response = await apiRequest('GET', header, '', 'getBudgetExpenses', queryParams);
       return response;
     }
   }
