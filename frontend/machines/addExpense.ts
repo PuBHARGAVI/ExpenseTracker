@@ -153,6 +153,10 @@ export const addExpenseModelMachine = model.createMachine({
       requestStatus: (_context, event) => event.data.status
     }),
 
+    setRequestStatus: model.assign({
+      requestStatus: (_context, event) => event.data.status
+    }),
+
     resetRequestStatus: model.assign({
       requestStatus: (_context) => ''
     }),

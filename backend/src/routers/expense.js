@@ -51,11 +51,6 @@ router.get('/getAllExpenses', cors(), auth, async (req, res) => {
             amount: expense.amount,
             description: expense.description,
             date: expense.date,
-            budget: {
-                amount: budget.amount,
-                startDate: budget.startDate,
-                endDate: budget.endDate,
-            },
         });
     });
 

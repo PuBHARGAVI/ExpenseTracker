@@ -48,7 +48,7 @@ export const ViewAllExpenses = ({navigation}) => {
         style={theme.viewAllBudgetStyles.touchableContainer}>
         <Text style={theme.viewAllBudgetStyles.touchableText}>{amount}</Text>
         <Text style={theme.viewAllBudgetStyles.touchableText}>
-          {formatDate}
+          {formattedDate}
         </Text>
         <Text style={theme.viewAllBudgetStyles.touchableText}>
           {description}
