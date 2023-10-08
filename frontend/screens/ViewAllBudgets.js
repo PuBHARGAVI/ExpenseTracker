@@ -10,6 +10,9 @@ import LinearGradient from 'react-native-linear-gradient';
 import {useViewAllBudgetsScreen} from './ViewAllBudgetsController';
 import {theme} from '../Theme';
 import {formatDate} from '../utils/dateUtils';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import { MessageOverlay } from '../components/MessageOverlay';
+import { Pressable } from 'react-native';
 
 export const ViewAllBudgets = ({navigation}) => {
   const controller = useViewAllBudgetsScreen();
@@ -43,12 +46,17 @@ export const ViewAllBudgets = ({navigation}) => {
     };
   }, []);
 
+  const handleBudgetDelete = id => {
+    controller.DELETE_BUDGET(id);
+  };
+
   const renderItem = ({item}) => {
     const {id, amount, startDate, endDate} = JSON.parse(item);
     formattedStartDate = formatDate(new Date(startDate));
     formattedEndDate = formatDate(new Date(endDate));
     return (
-      <TouchableOpacity onPress={()=>handleBudgetPress(id)}
+      <TouchableOpacity
+        onPress={() => handleBudgetPress(id)}
         activeOpacity={0.7}
         style={theme.viewAllBudgetStyles.touchableContainer}>
         <Text style={theme.viewAllBudgetStyles.touchableText}>{amount}</Text>
@@ -58,6 +66,11 @@ export const ViewAllBudgets = ({navigation}) => {
         <Text style={theme.viewAllBudgetStyles.touchableText}>
           {formattedEndDate}
         </Text>
+        <Pressable
+          onPress={() => handleBudgetDelete(id)}
+          style={theme.viewAllBudgetStyles.deleteIcon}>
+          <Icon name="trash" color="red" size={18} />
+        </Pressable>
       </TouchableOpacity>
     );
   };
@@ -68,6 +81,13 @@ export const ViewAllBudgets = ({navigation}) => {
       start={{x: 0, y: 0}}
       end={{x: 1, y: 1}}
       style={theme.viewAllBudgetStyles.linearGradientContainer}>
+      <MessageOverlay
+        isVisible={controller.requestStatus === 'success'}
+        message={'Budget & its Expenses are deleted successfully'}
+        onDismiss={() => {
+          return controller.DISMISS;
+        }}
+      />
       <View style={theme.viewAllBudgetStyles.headerContainer}>
         <Text style={theme.viewAllBudgetStyles.headerText}>Amount</Text>
         <Text style={theme.viewAllBudgetStyles.headerText}>Start Date</Text>

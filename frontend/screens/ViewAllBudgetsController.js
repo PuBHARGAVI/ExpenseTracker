@@ -3,6 +3,7 @@ import {
   selectBudgetsList,
   viewAllBudgetsModel,
   selectRequestStatus,
+  events
 } from '../machines/viewAllBudgets';
 
 export function useViewAllBudgetsScreen() {
@@ -10,6 +11,8 @@ export function useViewAllBudgetsScreen() {
 
   return {
     budgets: useSelector(service, selectBudgetsList),
-    requestStatus: useSelector(service, selectRequestStatus)
+    requestStatus: useSelector(service, selectRequestStatus),
+    DELETE_BUDGET: (budgetId) => service.send(events.DELETE_BUDGET(budgetId)),
+    DISMISS: () => service.send(events.DISMISS())
   };
 }

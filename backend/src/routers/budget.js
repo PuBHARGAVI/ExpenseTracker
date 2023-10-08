@@ -3,7 +3,8 @@ const cors = require('cors');
 const auth = require('../middleware/auth');
 const router = express.Router();
 const Budget = require('../models/Budget');
-const User = require('../models/User');
+const Expense = require('../models/Expense');
+const mongoose = require('mongoose');
 
 router.post('/addBudget', cors(), auth, async (req, res) => {
   try {
@@ -57,5 +58,22 @@ router.get('/getAllBudgets', cors(), auth, async (req, res) => {
     res.status(400).send({status: error});
   }
 })
+
+router.delete('/deleteBudget', cors(), auth, async (req, res) => {
+  try {
+    await Expense.deleteMany({
+      budget: new mongoose.Types.ObjectId(req.query.budgetId),
+    });
+    await Budget.findOneAndRemove({_id: req.query.budgetId})
+      .then(() => {
+        res.status(200).send({status: 'success'});
+      })
+      .catch(error => {
+        res.status(400).send({status: error});
+      });
+  } catch (error) {
+    res.status(500).send({status: error});
+  }
+});
 
 module.exports = router;
