@@ -6,45 +6,56 @@ const Budget = require('../models/Budget');
 const User = require('../models/User');
 
 router.post('/addBudget', cors(), auth, async (req, res) => {
-  const budget = new Budget({
-    amount: req.body.amount,
-    startDate: req.body.startDate,
-    endDate: req.body.endDate,
-    user: req.user
-  });
-
-  await budget
-    .save()
-    .then(() => {
-      res.send({status: 'success'})})
-    .catch(error => {
-      if (error.name === 'ValidationError') {
-        const validationErrors = Object.values(error.errors).map(err =>
-          err.message.replace('Path `', '').replace('`', '').replace('.', ''),
-        );
-        const formattedError = validationErrors.join(', ');
-
-        res.status(400).send({status: formattedError});
-      } else {
-        res.status(500).send({status: 'Internal server error'});
-      }
+  try {
+    const budget = new Budget({
+      amount: req.body.amount,
+      startDate: req.body.startDate,
+      endDate: req.body.endDate,
+      user: req.user,
     });
+
+    await budget
+      .save()
+      .then(() => {
+        res.send({status: 'success'});
+      })
+      .catch(error => {
+        if (error.name === 'ValidationError') {
+          const validationErrors = Object.values(error.errors).map(err =>
+            err.message.replace('Path `', '').replace('`', '').replace('.', ''),
+          );
+          const formattedError = validationErrors.join(', ');
+
+          res.status(400).send({status: formattedError});
+        } else {
+          res.status(500).send({status: 'Internal server error'});
+        }
+      });
+  } catch (error) {
+    res.status(400).send({status: error});
+  }
 });
 
 router.get('/getAllBudgets', cors(), auth, async (req, res) => {
-  const user = req.user;
-  
-  let budgetList = await Budget.find({user: user._id}).populate('user').exec()
-  budgetList = budgetList.map(budget => {
-    return JSON.stringify({
-      id: budget._id,
-      amount: budget.amount,
-      startDate: budget.startDate,
-      endDate: budget.endDate
-    })
-  })
+  try {
+    const user = req.user;
 
-  res.status(200).send({budgetList: budgetList})
+    let budgetList = await Budget.find({user: user._id})
+      .populate('user')
+      .exec();
+    budgetList = budgetList.map(budget => {
+      return JSON.stringify({
+        id: budget._id,
+        amount: budget.amount,
+        startDate: budget.startDate,
+        endDate: budget.endDate,
+      });
+    });
+
+    res.status(200).send({budgetList: budgetList});
+  } catch (error) {
+    res.status(400).send({status: error});
+  }
 })
 
 module.exports = router;
