@@ -14,16 +14,24 @@ import {
   NavigationContainer,
 } from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {SafeAreaView, StatusBar, useColorScheme} from 'react-native';
+import {
+  SafeAreaView,
+  StatusBar,
+  TouchableOpacity,
+  useColorScheme,
+} from 'react-native';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import {AddNewBudget} from './screens/AddNewBudget';
 import {AddNewExpense} from './screens/AddNewExpense';
 import {ViewAllBudgets} from './screens/ViewAllBudgets';
 import {themeColors, fontFamily} from './Theme';
-import { Login } from './screens/Login';
-import { Signup } from './screens/Signup';
-import { Expense } from './screens/Expense';
-import { ViewAllExpenses } from './screens/ViewAllExpenses';
+import {Login} from './screens/Login';
+import {Signup} from './screens/Signup';
+import {Expense} from './screens/Expense';
+import {ViewAllExpenses} from './screens/ViewAllExpenses';
+import {Text} from 'react-native-elements';
+import {useLoginScreen} from './screens/LoginController';
+import { MessageOverlay } from './components/MessageOverlay';
 
 const Stack = createNativeStackNavigator();
 
@@ -32,6 +40,12 @@ function App(): JSX.Element {
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
     flex: 1,
+  };
+
+  const controller = useLoginScreen();
+
+  const handleLogout = () => {
+    controller.LOGOUT();
   };
 
   return (
@@ -43,14 +57,23 @@ function App(): JSX.Element {
       <NavigationContainer theme={isDarkMode ? DarkTheme : DefaultTheme}>
         <Stack.Navigator
           initialRouteName="Login"
-          screenOptions={{
+          screenOptions={({route}) => ({
+            // headerRight: () =>
+            //   route.name !== 'Login' ? (
+            //     <TouchableOpacity onPress={handleLogout}>
+            //       <Text
+            //         style={{color: 'red', textAlign: 'right', fontSize: 18}}>
+            //         Logout
+            //       </Text>
+            //     </TouchableOpacity>
+            //   ) : null,
             headerTitleAlign: 'center',
             headerTitleStyle: {
               color: themeColors.dodgerblue,
               fontFamily: fontFamily,
               fontWeight: 'bold',
             },
-          }}>
+          })}>
           <Stack.Screen
             name="Login"
             component={Login}

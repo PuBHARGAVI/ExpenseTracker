@@ -2,18 +2,23 @@
 import { EventFrom, StateFrom } from 'xstate';
 import { createModel } from 'xstate/lib/model';
 import { apiRequest } from '../utils/requestApi';
+import { __AuthenticationToken } from '../utils/globalVariables';
+
 const model = createModel(
   {
     email: "" as string,
     password: "" as string,
     loginStatus: "" as string,
+    logoutStatus: "" as string,
     authToken: "" as string
   },
   {
     events: {
       ADD_EMAIL: (email: string) => ({ email }),
       ADD_PASSWORD: (password: string) => ({ password }),
-      SUBMIT: () => ({})
+      SUBMIT: () => ({}),
+      LOGOUT: () => ({}),
+      RESET_LOGOUT_STATUS: () => ({})
     }
   }
 )
@@ -42,6 +47,13 @@ export const loginMachine = model.createMachine({
         SUBMIT: {
           actions: ['resetLoginStatus', 'resetAuthToken'],
           target: 'saveUserCredentials'
+        },
+        LOGOUT: {
+          actions: ['resetAuthToken','resetAuthTokenInGlobalVaribles'],
+          target: 'removeLoginCredentials'
+        },
+        RESET_LOGOUT_STATUS: {
+          actions: 'resetLogoutStatus'
         }
       }
     },
@@ -54,6 +66,19 @@ export const loginMachine = model.createMachine({
         },
         onError: {
           actions: 'setLoginStatus',
+          target: '#loginModel.idle'
+        }
+      }
+    },
+    removeLoginCredentials: {
+      invoke: {
+        src: 'sendLogoutRequest',
+        onDone: {
+          actions: ['setLogoutStatus'],
+          target: '#loginModel.idle'
+        },
+        onError: {
+          actions: 'setLogoutStatus',
           target: '#loginModel.idle'
         }
       }
@@ -71,15 +96,26 @@ export const loginMachine = model.createMachine({
       loginStatus: (_context, event) => {
         return event.data.status}
     }),
+    setLogoutStatus: model.assign({
+      logoutStatus: (_context, event) => {
+        return event.data.status
+      }
+    }),
     setAuthenticationToken: model.assign({
       authToken: (_context, event) => event.data.token
     }),
     resetLoginStatus: model.assign({
       loginStatus: (_context, event) => ''
     }),
+    resetLogoutStatus: model.assign({
+      logoutStatus: (_context, event) => ''
+    }),
     resetAuthToken: model.assign({
       authToken: (_context, event) => ''
     }),
+    resetAuthTokenInGlobalVaribles:()=>{
+      __AuthenticationToken.setToken('')
+    } 
   },
   services: {
     sendLoginRequest: async (context) => {
@@ -91,7 +127,16 @@ export const loginMachine = model.createMachine({
 
       const response = await apiRequest('POST', header, body, 'login');
       return response;
-    }
+    },
+    sendLogoutRequest: async () => {
+      const header = {
+        'Accept': 'application/json',
+        'Authorization': __AuthenticationToken.getToken()
+      };
+
+      const response = await apiRequest('PATCH', header, '', 'logout');
+      return response;
+    },
   }
 }
 )
@@ -112,4 +157,8 @@ export function selectLoginStatus(state: State) {
 
 export function selectAuthToken(state: State) {
   return state.context.authToken;
+}
+
+export function selectLogoutStatus(state: State) {
+  return state.context.logoutStatus;
 }

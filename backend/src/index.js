@@ -7,6 +7,7 @@ const port = 3000
 const userRouter = require('./routers/user')
 const budgetRouter = require('./routers/budget')
 const expenseRouter = require('./routers/expense');
+const logoutRouter = require('./routers/logout');
 
 app.use(cors({
   "origin": "*",
@@ -18,6 +19,7 @@ app.use(userRouter);
 app.use(auth);
 app.use(budgetRouter);
 app.use(expenseRouter);
+app.use(logoutRouter);
 
 app.listen(port,()=>{
   console.log("listening to the server")

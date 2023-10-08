@@ -48,7 +48,6 @@ export const viewAllBudgetsModel = model.createMachine({
     
     storeBudgetList: model.assign({
       budgets: (_context, event) => {
-        console.log("budgets:",event.data.budgetList)
         return event.data.budgetList
       }
     }),

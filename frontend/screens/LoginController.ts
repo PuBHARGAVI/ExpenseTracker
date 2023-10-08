@@ -4,6 +4,7 @@ import {
   loginMachine,
   selectAuthToken,
   selectLoginStatus,
+  selectLogoutStatus,
   selectUserEmail,
   selectUserPassword,
 } from '../machines/login';
@@ -18,9 +19,16 @@ export function useLoginScreen() {
     SUBMIT: () => {
       service.send(events.SUBMIT());
     },
+    LOGOUT: () => {
+      service.send(events.LOGOUT());
+    },
+    RESET_LOGOUT_STATUS: () => {
+      service.send(events.RESET_LOGOUT_STATUS());
+    },
     email: useSelector(service, selectUserEmail),
     password: useSelector(service, selectUserPassword),
     loginStatus: useSelector(service, selectLoginStatus),
     authToken: useSelector(service, selectAuthToken),
+    logoutStatus: useSelector(service, selectLogoutStatus),
   };
 }

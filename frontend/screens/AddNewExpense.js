@@ -30,7 +30,6 @@ export const AddNewExpense = ({navigation}) => {
   }
 
   if (controller.budgets.length > 0) {
-    console.log('array:', controller.budgets);
     parsedData = controller.budgets.map(item => JSON.parse(item));
   }
 

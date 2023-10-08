@@ -22,7 +22,6 @@ export const Login = ({navigation}) => {
   };
 
   if (controller.loginStatus === 'success') {
-    console.log("authtoken:",controller.authToken)
     __AuthenticationToken.setToken(controller.authToken);
     navigation.reset({
       index: 0,

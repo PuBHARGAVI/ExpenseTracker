@@ -1,7 +1,7 @@
 import React from 'react';
-import {Text, StyleSheet, Pressable, View} from 'react-native';
+import { Pressable, Text, View } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import {theme, themeColors} from '../Theme';
+import { theme, themeColors } from '../Theme';
 
 export const Home = ({navigation}) => {
   return (
@@ -9,6 +9,11 @@ export const Home = ({navigation}) => {
       colors={['white', 'lightblue']}
       start={{x: 0, y: 0}}
       end={{x: 1, y: 1}}>
+      {/* <MessageOverlay
+        isVisible={logoutStatus !== 'success' && loginStatus !== ''}
+        message={'Logout is failed'}
+        onDismiss={handleOnDismiss}
+      /> */}
       <View style={theme.styles.pressableView}>
         <Pressable
           style={({pressed}) => [
