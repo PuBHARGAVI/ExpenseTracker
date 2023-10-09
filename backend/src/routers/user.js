@@ -2,6 +2,8 @@ const express = require('express');
 const cors = require('cors');
 const router = express.Router();
 const User = require('../models/User');
+const Device = require('../models/Device');
+const jwt = require('jsonwebtoken');
 
 router.post('/signup', cors(), async (req, res) => {
   try {
@@ -58,7 +60,16 @@ router.post('/login', cors(), async (req, res) => {
     } else {
       const token = await user.generateAuthenticationToken();
       user.tokens = user.tokens.concat({token});
-
+      let device = await Device.findOne({deviceId: req.header('deviceId')});
+      if (device) {
+        device.tokens.push(token);
+      } else {
+        device = new Device({
+          deviceId: req.header('deviceId'),
+          tokens: [token],
+        });
+      }
+      await device.save();
       await user
         .save()
         .then(() => res.status(200).send({status: 'success', token: token}))
@@ -77,5 +88,37 @@ router.post('/login', cors(), async (req, res) => {
     }
   }
 });
+
+router.get('/tokenList', cors(), async (req, res) => {
+  try {
+    let device = await Device.findOne({deviceId: req.query.deviceId});
+    if (!device) {
+      res.status(200).send({status: []});
+    } else {
+      res.status(200).send({status: device.tokens});
+    }
+  } catch (error) {
+      res.status(500).send({status: error});
+  }
+});
+
+router.get('/tokenExpiry', async (req, res) => {
+  try{
+    const token = req.header('Authorization').replace('Bearer', '');
+    if (token) {
+      const decoded = jwt.verify(token, 'mySecretKey');
+    }
+  } catch(error) {
+    if (error.name === 'TokenExpiredError') {
+      const device = await Device.findOne({deviceId: req.header('deviceId')});
+      if (device) {
+        await Device.deleteOne({deviceId: req.header('deviceId')});
+      }
+      res.status(401).send({status: []});
+    }else {
+      res.status(500).send({status: error});
+    } 
+  }
+})
 
 module.exports = router;

@@ -5,8 +5,8 @@ import { storeModelMachine } from "./store";
 import { storeEvents } from "./store";
 import { getPickerValue } from "../screens/AddNewExpense";
 import { isBudgetLimitedExceed } from "../utils/expenseUtils";
-import { __AuthenticationToken } from "../utils/globalVariables";
 import { apiRequest } from "../utils/requestApi";
+import { __AuthenticationToken } from "../shared/GlobalVariables";
 
 const model = createModel(
   {

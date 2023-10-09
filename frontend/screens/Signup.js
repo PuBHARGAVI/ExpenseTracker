@@ -3,7 +3,7 @@ import {Button, View, Text} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import {theme} from '../Theme';
 import {LabeledInputField} from '../components/LabeledInputField';
-import {__AuthenticationToken} from '../utils/globalVariables';
+import {__AuthenticationToken} from '../shared/GlobalVariables';
 import {useSingupScreen} from './SignupController';
 
 export const Signup = props => {

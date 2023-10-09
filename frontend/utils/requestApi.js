@@ -1,3 +1,5 @@
+import { __DeviceId } from "../shared/GlobalVariables";
+
 export const apiRequest = async (
   method,
   header = {},
@@ -5,6 +7,7 @@ export const apiRequest = async (
   endpoint,
   queryParams,
 ) => {
+  header['deviceId'] = __DeviceId.getDeviceId();
   const requestOptions = {
     method: method,
     headers: header,

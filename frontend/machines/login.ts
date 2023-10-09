@@ -2,7 +2,7 @@
 import { EventFrom, StateFrom } from 'xstate';
 import { createModel } from 'xstate/lib/model';
 import { apiRequest } from '../utils/requestApi';
-import { __AuthenticationToken } from '../utils/globalVariables';
+import { __AuthenticationToken } from '../shared/GlobalVariables';
 
 const model = createModel(
   {
@@ -61,7 +61,7 @@ export const loginMachine = model.createMachine({
       invoke: {
         src: 'sendLoginRequest',
         onDone: {
-          actions: ['setLoginStatus', 'setAuthenticationToken'],
+          actions: ['setAuthenticationToken','setLoginStatus'],
           target: '#loginModel.idle'
         },
         onError: {
@@ -93,7 +93,7 @@ export const loginMachine = model.createMachine({
       password: (_context, event) => event.password
     }),
     setLoginStatus: model.assign({
-      loginStatus: (_context, event) => {
+      loginStatus: (context, event) => {
         return event.data.status}
     }),
     setLogoutStatus: model.assign({
@@ -102,7 +102,8 @@ export const loginMachine = model.createMachine({
       }
     }),
     setAuthenticationToken: model.assign({
-      authToken: (_context, event) => event.data.token
+      authToken: (_context, event) => {
+        return event.data.token}
     }),
     resetLoginStatus: model.assign({
       loginStatus: (_context, event) => ''

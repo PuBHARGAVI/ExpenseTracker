@@ -1,8 +1,8 @@
 import { EventFrom, StateFrom } from "xstate";
 import { createModel } from "xstate/lib/model";
-import { __AuthenticationToken } from "../utils/globalVariables";
 import { apiRequest } from "../utils/requestApi";
 import { AppServices } from "./AddBudget";
+import { __AuthenticationToken } from "../shared/GlobalVariables";
 
 const model = createModel({
   expenses: {} as unknown,

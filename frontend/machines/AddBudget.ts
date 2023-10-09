@@ -3,8 +3,7 @@ import { createModel } from 'xstate/lib/model';
 import { storeEvents } from './store';
 import { storeModelMachine } from './store';
 import { apiRequest } from '../utils/requestApi';
-import { __AuthenticationToken } from '../utils/globalVariables';
-
+import { __AuthenticationToken } from '../shared/GlobalVariables';
 const model = createModel(
     {
         amount: 0 as Number,

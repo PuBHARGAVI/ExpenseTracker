@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
+const Device = require('../models/Device');
 
 const auth = async (req, res, next) => {
   try {
@@ -16,9 +17,15 @@ const auth = async (req, res, next) => {
     }
   } catch (error) {
     if (error.name === 'TokenExpiredError') {
-      res.status(401).send({status: 'please Authenticate yourself'})
-    };
-    res.status(500).send({status: error})
+      const device = await Device.findOne({deviceId: req.header('deviceId')});
+      if (device) {
+        await Device.deleteOne({deviceId: req.header('deviceId')});
+      }
+      res.status(401).send({status: 'please Authenticate yourself'});
+    }
+    else{
+      res.status(500).send({status: error});
+    }
   }
 };
 

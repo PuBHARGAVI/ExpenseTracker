@@ -5,7 +5,7 @@
  * @format
  */
 
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {Home} from './screens/Home';
 import {Budget} from './screens/Budget';
 import {
@@ -17,7 +17,6 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {
   SafeAreaView,
   StatusBar,
-  TouchableOpacity,
   useColorScheme,
 } from 'react-native';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
@@ -29,9 +28,9 @@ import {Login} from './screens/Login';
 import {Signup} from './screens/Signup';
 import {Expense} from './screens/Expense';
 import {ViewAllExpenses} from './screens/ViewAllExpenses';
-import {Text} from 'react-native-elements';
 import {useLoginScreen} from './screens/LoginController';
-import { MessageOverlay } from './components/MessageOverlay';
+import {__AuthenticationToken, __DeviceId} from './shared/GlobalVariables';
+import {apiRequest} from './utils/requestApi';
 
 const Stack = createNativeStackNavigator();
 
@@ -41,13 +40,52 @@ function App(): JSX.Element {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
     flex: 1,
   };
-
   const controller = useLoginScreen();
 
   const handleLogout = () => {
     controller.LOGOUT();
   };
 
+  const [tokenList, setTokenList] = useState([]);
+  const checkTokenExpiry = async (token: string) => {
+    const header = {
+      Accept: 'application/json',
+      Authorization: token,
+    };
+
+    const response = await apiRequest('GET', header, '', 'tokenExpiry');
+    setTokenList(response.status);
+  };
+
+  const checkLoginStatus = async () => {
+    const header = {
+      Accept: 'application/json',
+      Authorization: __AuthenticationToken.getToken(),
+    };
+
+    const queryParams = `deviceId=${__DeviceId.deviceId}`;
+
+    const response = await apiRequest(
+      'GET',
+      header,
+      '',
+      'tokenList',
+      queryParams,
+    );
+    const tokenList = response.status;
+    setTokenList(tokenList)
+    if (tokenList.length > 0) {
+      __AuthenticationToken.setToken(tokenList[0])
+      checkTokenExpiry(tokenList[0]);
+    }
+  };
+
+  useEffect(() => {
+    checkLoginStatus();
+    console.log("after%%%")
+  }, [__DeviceId.deviceId]);
+
+  const initialRouteName = tokenList.length === 0 ? 'Login' : 'Home';
   return (
     <SafeAreaView style={[backgroundStyle]}>
       <StatusBar
@@ -56,7 +94,7 @@ function App(): JSX.Element {
       />
       <NavigationContainer theme={isDarkMode ? DarkTheme : DefaultTheme}>
         <Stack.Navigator
-          initialRouteName="Login"
+          initialRouteName={initialRouteName}
           screenOptions={({route}) => ({
             // headerRight: () =>
             //   route.name !== 'Login' ? (
@@ -74,16 +112,20 @@ function App(): JSX.Element {
               fontWeight: 'bold',
             },
           })}>
-          <Stack.Screen
-            name="Login"
-            component={Login}
-            options={{title: 'Login'}}
-          />
-          <Stack.Screen
-            name="Signup"
-            component={Signup}
-            options={{title: 'Signup'}}
-          />
+          {initialRouteName !== 'Home' && (
+            <Stack.Screen
+              name="Login"
+              component={Login}
+              options={{title: 'Login'}}
+            />
+          )}
+          {initialRouteName !== 'Home' && (
+            <Stack.Screen
+              name="Signup"
+              component={Signup}
+              options={{title: 'Signup'}}
+            />
+          )}
           <Stack.Screen
             name="Home"
             component={Home}

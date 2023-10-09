@@ -2,9 +2,8 @@ import { createModel } from "xstate/lib/model";
 import { EventFrom, StateFrom, spawn } from "xstate";
 import { storeEvents } from "./store";
 import { AppServices } from "./AddBudget";
-import { storeModelMachine } from "./store";
-import { __AuthenticationToken } from "../utils/globalVariables";
 import { apiRequest } from "../utils/requestApi";
+import { __AuthenticationToken } from "../shared/GlobalVariables";
 
 const model = createModel({
   budgets: {} as unknown,

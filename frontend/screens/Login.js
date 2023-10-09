@@ -3,8 +3,8 @@ import {Button, Pressable, Text, View} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import {theme} from '../Theme';
 import {LabeledInputField} from '../components/LabeledInputField';
-import {__AuthenticationToken} from '../utils/globalVariables';
 import {useLoginScreen} from './LoginController';
+import { __AuthenticationToken } from '../shared/GlobalVariables';
 
 export const Login = ({navigation}) => {
   const controller = useLoginScreen();
