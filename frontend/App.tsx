@@ -82,7 +82,6 @@ function App(): JSX.Element {
 
   useEffect(() => {
     checkLoginStatus();
-    console.log("after%%%")
   }, [__DeviceId.deviceId]);
 
   const initialRouteName = tokenList.length === 0 ? 'Login' : 'Home';

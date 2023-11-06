@@ -17,7 +17,7 @@ const model = createModel(
     showDatePicker: false as boolean,
     serviceRefs: {} as AppServices,
     budgetKey: "" as string,
-    budgets: {} as unknown,
+    budgets: [] as unknown,
     budgetExceededInfo: "" as string,
     storeResponse: "" as string,
     requestStatus: "" as string

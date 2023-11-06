@@ -52,7 +52,6 @@ export const AddNewExpense = ({navigation}) => {
   };
 
   const handleBudgetChange = budget => {
-    console.log("budget selecetion:",budget)
     controller.ON_BUDGET_SELECTION(budget);
   };
   return (
