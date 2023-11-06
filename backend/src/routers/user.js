@@ -4,6 +4,7 @@ const router = express.Router();
 const User = require('../models/User');
 const Device = require('../models/Device');
 const jwt = require('jsonwebtoken');
+const {errors} = require('../utils/constants');
 
 router.post('/signup', cors(), async (req, res) => {
   try {
@@ -29,13 +30,8 @@ router.post('/signup', cors(), async (req, res) => {
         });
     }
   } catch (error) {
-    if (error.name === 'ValidationError') {
-      const validationErrors = Object.values(error.errors).map(err =>
-        err.message.replace('Path `', '').replace('`', '').replace('.', ''),
-      );
-      const formattedError = validationErrors.join(', ');
-
-      res.status(400).send({status: formattedError});
+    if (Object.keys(errors).includes(error.field)) {
+      res.status(400).send({status: error.message});
     } else {
       res.status(500).send({status: 'Internal server error'});
     }
@@ -76,13 +72,8 @@ router.post('/login', cors(), async (req, res) => {
         .catch(e => res.send({status: e}));
     }
   } catch (error) {
-    if (error.name === 'ValidationError') {
-      const validationErrors = Object.values(error.errors).map(err =>
-        err.message.replace('Path `', '').replace('`', '').replace('.', ''),
-      );
-      const formattedError = validationErrors.join(', ');
-
-      res.status(400).send({status: formattedError});
+    if (Object.keys(errors).includes(error.field)) {
+      res.status(400).send({status: error.message});
     } else {
       res.status(500).send({status: 'Internal server error'});
     }
@@ -98,27 +89,27 @@ router.get('/tokenList', cors(), async (req, res) => {
       res.status(200).send({status: device.tokens});
     }
   } catch (error) {
-      res.status(500).send({status: error});
+    res.status(500).send({status: error});
   }
 });
 
 router.get('/tokenExpiry', async (req, res) => {
-  try{
+  try {
     const token = req.header('Authorization').replace('Bearer', '');
     if (token) {
       const decoded = jwt.verify(token, 'mySecretKey');
     }
-  } catch(error) {
+  } catch (error) {
     if (error.name === 'TokenExpiredError') {
       const device = await Device.findOne({deviceId: req.header('deviceId')});
       if (device) {
         await Device.deleteOne({deviceId: req.header('deviceId')});
       }
       res.status(401).send({status: []});
-    }else {
+    } else {
       res.status(500).send({status: error});
-    } 
+    }
   }
-})
+});
 
 module.exports = router;

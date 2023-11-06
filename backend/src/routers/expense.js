@@ -5,6 +5,7 @@ const auth = require('../middleware/auth');
 const Budget = require('../models/Budget');
 const Expense = require('../models/Expense');
 const router = express.Router();
+const {errors} = require('../utils/constants');
 
 router.post('/addExpense', cors(), auth, async (req, res) => {
   try {
@@ -25,13 +26,8 @@ router.post('/addExpense', cors(), auth, async (req, res) => {
         res.send({status: 'success'});
       })
       .catch(error => {
-        if (error.name === 'ValidationError') {
-          const validationErrors = Object.values(error.errors).map(err =>
-            err.message.replace('Path `', '').replace('`', '').replace('.', ''),
-          );
-          const formattedError = validationErrors.join(', ');
-
-          res.status(400).send({status: formattedError});
+        if (Object.keys(errors).includes(error.field)) {
+          res.status(400).send({status: error.message});
         } else {
           res.status(500).send({status: 'Internal server error'});
         }

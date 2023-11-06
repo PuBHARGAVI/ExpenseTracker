@@ -1,5 +1,6 @@
-const mongoose = require('mongoose')
-const jwt = require('jsonwebtoken')
+const mongoose = require('mongoose');
+const jwt = require('jsonwebtoken');
+const {createCustomError} = require('../utils/constants');
 
 const userSchema = new mongoose.Schema({
   email: {
@@ -7,23 +8,11 @@ const userSchema = new mongoose.Schema({
     required: true,
     trim: true,
     lowerCase: true,
-    validate(value){
-      const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
-
-      if(value.length == 0){
-        throw 'Email should not be empty';
-      }
-      else if(!emailPattern.test(value)){
-        throw 'Email pattern is incorrect';
-      }
-    }
   },
   password: {
     type: String,
     required: true,
     trim: true,
-    minlength: 6,
-    maxlenght: 12
   },
   tokens: [
     {
@@ -35,19 +24,41 @@ const userSchema = new mongoose.Schema({
   ],
 });
 
+userSchema.pre('validate', function (next) {
+  const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+  let error;
+
+  if (this.email.length == 0) {
+    error = createCustomError('email', 'zero');
+    return next(error);
+  }
+  if (!emailPattern.test(this.email)) {
+    error = createCustomError('email', 'invalidPattern');
+    return next(error);
+  }
+  const passwordLength = this.password.length;
+  if (passwordLength < 6 || passwordLength > 12) {
+    error = createCustomError('password', 'lengthExeceeded');
+    return next(error);
+  }
+  next();
+});
+
 userSchema.methods.generateAuthenticationToken = function () {
   const user = this;
-  const token = jwt.sign({_id: user._id.toString()}, 'mySecretKey', {expiresIn: 1800});
+  const token = jwt.sign({_id: user._id.toString()}, 'mySecretKey', {
+    expiresIn: 1800,
+  });
 
   return token;
 };
 
-userSchema.statics.findByCredentials = async (email) => {
+userSchema.statics.findByCredentials = async email => {
   const user = await User.findOne({email});
 
   return user;
 };
 
-const User = mongoose.model('User', userSchema)
+const User = mongoose.model('User', userSchema);
 
-module.exports = User
+module.exports = User;

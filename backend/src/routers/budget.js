@@ -5,6 +5,7 @@ const router = express.Router();
 const Budget = require('../models/Budget');
 const Expense = require('../models/Expense');
 const mongoose = require('mongoose');
+const {errors} = require('../utils/constants');
 
 router.post('/addBudget', cors(), auth, async (req, res) => {
   try {
@@ -21,16 +22,11 @@ router.post('/addBudget', cors(), auth, async (req, res) => {
         res.send({status: 'success'});
       })
       .catch(error => {
-        if (error.name === 'ValidationError') {
-          const validationErrors = Object.values(error.errors).map(err =>
-            err.message.replace('Path `', '').replace('`', '').replace('.', ''),
-          );
-          const formattedError = validationErrors.join(', ');
-
-          res.status(400).send({status: formattedError});
-        } else {
-          res.status(500).send({status: 'Internal server error'});
-        }
+       if (Object.keys(errors).includes(error.field)) {
+         res.status(400).send({status: error.message});
+       } else {
+         res.status(500).send({status: 'Internal server error'});
+       }
       });
   } catch (error) {
     res.status(400).send({status: error});
