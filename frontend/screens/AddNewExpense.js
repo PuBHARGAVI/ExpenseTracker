@@ -62,8 +62,10 @@ export const AddNewExpense = ({navigation}) => {
       end={{x: 1, y: 1}}
       style={theme.addNewExpenseStyles.linearGradientContainer}>
       <MessageOverlay
-        isVisible={controller.requestStatus === 'success'}
-        message={'Expense is successfully saved'}
+        isVisible={controller.requestStatus.includes(
+          'Expense is successfully stored',
+        )}
+        message={controller.requestStatus}
         onDismiss={() => {
           return controller.DISMISS;
         }}
@@ -130,7 +132,7 @@ export const AddNewExpense = ({navigation}) => {
           </View>
         )}
       </View>
-      {controller.requestStatus !== 'success' && (
+      {!controller.requestStatus.includes('Expense is successfully stored') && (
         <Text style={{color: '#B00020', textAlign: 'center', margin: 10}}>
           {controller.requestStatus}
         </Text>
